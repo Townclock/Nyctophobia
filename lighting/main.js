@@ -11,7 +11,12 @@ var player;
 function preload() {
 	game.load.image('player', 'Assets/triangle.jpg');
 	game.load.image('wall', 'Assets/purplebrick.png');
+
+    game.load.image('circle', 'bitmapCircle.png')
+
     game.stage.backgroundColor = 0x882110;
+
+
 }
 
 function create() {
@@ -30,6 +35,10 @@ function create() {
 	player = new Player(game, 400, 400, 'player', null, walls);
 	player.scale.setTo(.3);
     player.anchor.setTo(.5,.5);
+
+    // lightCircleImage
+    lightCircle = game.add.image(player.x, player.y, 'circle')
+    lightCircle.anchor.setTo(0.5, 0.5);
 
 
     // bitmap for the light cones
@@ -223,6 +232,9 @@ function update() {
     // connect the dots of visible space and fill them with white.
     // through the mask, this should make everything in that space visible
 
+
+
+
     this.bitmap.context.beginPath();
     this.bitmap.context.fillStyle = 'rgb(255,255,255)';
     this.bitmap.context.moveTo(points[0].x, points[0].y);
@@ -231,12 +243,21 @@ function update() {
     }    
     this.bitmap.context.closePath();
     this.bitmap.context.fill();
-
-
-
+/*
+    // difficult code for nearby light
+    // currently using sprite instead
+    this.bitmap.context.beginPath();
+    this.bitmap.context.arc(player.x, player.y, 100, 0, 2*Math.PI, true);
+    this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
+    this.bitmap.context.closePath();
+    this.bitmap.context.fill();
+*/
     // This just tells the engine it should update the texture cache
         this.bitmap.dirty = true;
             this.rayBitmap.dirty = true;
+
+    lightCircle.x = player.x;
+    lightCircle.y = player.y;
 }
 
 getWallIntersection=  function (ray, wall_group){
