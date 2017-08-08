@@ -46,10 +46,12 @@ function update() {
         player.body.velocity.y = 150;
     }
 
+    //Create torches on 'T' key
     if(game.input.keyboard.justPressed(Phaser.Keyboard.T)){
         lights.create(player.body.x + 32, player.body.y + 32, 'firstaid');
     }
 
+    //Monster goes to first created light
     if (lights.countLiving() > 0){
         this.physics.arcade.moveToObject(monster, lights.getFirstAlive(), 100);
 
