@@ -53,7 +53,7 @@ Play.prototype = {
         bmd = game.add.bitmapData(this.game.width, this.game.height);
         bmd.context.fillStyle = 'rgb(255,255,255)';
         bmd.context.strokeStyle = 'rgb(255,255,255)';
-
+        
 
         circleBitmap = game.add.image(0,0, bmd);
         //circleBitmap.visible = false;
@@ -80,7 +80,7 @@ Play.prototype = {
     },
 
     update: function() {
-
+    
        if(game.input.activePointer.leftButton.isDown){
             lights.children[0].type = 2;
         }
@@ -420,7 +420,7 @@ buildMap = function(room) {
         wall = new Wall(game, game.world.width - 5, y, 'wall');
         walls.add(wall);
     }
-  */
+  */  
     makeWall(1, 2, 3, true, 0);
     walls.callAll('destroy');
     while(walls.children.length){

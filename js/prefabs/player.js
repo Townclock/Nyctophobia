@@ -27,7 +27,7 @@ Player.prototype.update = function() {
 
 	//collision with torch and battery
 
-
+    
     game.physics.arcade.overlap(this, torch, torchAdd, null, this);
 	game.physics.arcade.overlap(this, battery, batteryAdd, null, this);
 
