@@ -87,11 +87,10 @@ Play.prototype = {
         monster = new Monster(game, 250, 250, 'monster', null, walls);
 
         game.add.existing(player);
-        //game.add.existing(monster);
+        game.add.existing(monster);
 
         // lightCircleImage
         lightCircle = game.add.image(player.x, player.y, 'circle')
-        lightCircle.visible = false;
         lightCircle.anchor.setTo(0.5, 0.5);
         game.stage.backgroundColor = 0x882110;
 
@@ -114,7 +113,7 @@ Play.prototype = {
     update : function() {
         // fill the stage with darkness
         console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(150, 150, 150)';
+        this.bitmap.context.fillStyle = 'rgb(0, 0, 0)';
         this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
         // stage corners
