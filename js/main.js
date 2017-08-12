@@ -41,9 +41,16 @@ Title.prototype = {
         titleImage.anchor.setTo(.5, .5);
         titleImage.alpha = 0;
         game.input.mouse.capture = true;
+        f = -60;
     },
     update: function(){
-        if (f <= 0){
+        if(f < -1){
+            f++;
+        }
+        else if (f === -1){
+            f = 40;
+        }
+        else if (f <= 0){
             if(Math.random() > .99){
                 f = Math.floor(Math.random() * 20) + 10;
             }
@@ -80,10 +87,11 @@ Play.prototype = {
         monster = new Monster(game, 250, 250, 'monster', null, walls);
 
         game.add.existing(player);
-        game.add.existing(monster);
+        //game.add.existing(monster);
 
         // lightCircleImage
         lightCircle = game.add.image(player.x, player.y, 'circle')
+        lightCircle.visible = false;
         lightCircle.anchor.setTo(0.5, 0.5);
         game.stage.backgroundColor = 0x882110;
 
@@ -106,7 +114,7 @@ Play.prototype = {
     update : function() {
         // fill the stage with darkness
         console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(10, 10, 10)';
+        this.bitmap.context.fillStyle = 'rgb(150, 150, 150)';
         this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
         // stage corners
@@ -128,9 +136,9 @@ Play.prototype = {
                 new Phaser.Point(wall.x - 0.1 , wall.y - 0.1),
                 
                 new Phaser.Point(wall.x - 0.1 + wall.width, wall.y + 0.1),
-                new Phaser.Point(wall.x - 0.1 + wall.width, wall.y - 0.1),
+                new Phaser.Point(wall.x + 0.1 + wall.width, wall.y - 0.1),
 
-                new Phaser.Point(wall.x - 0.1 + wall.width , wall.y + 0.1 + wall.height),
+                new Phaser.Point(wall.x - 0.1 + wall.width , wall.y - 0.1 + wall.height),
                 new Phaser.Point(wall.x + 0.1 + wall.width , wall.y + 0.1 + wall.height),
             
                 new Phaser.Point(wall.x + 0.1 , wall.y - 0.1 + wall.height),
@@ -156,15 +164,15 @@ Play.prototype = {
                         end = new Phaser.Point(player.x, 0)
                     }
                     else {
-                        end = new Phaser.point(player, this.game.height);
+                        end = new Phaser.Point(player, this.game.height);
                     }
                 }
                 else if (c.y === player.y){ //player is horizontal to a corner
-                    if (c.x <= this.light.x){
-                        ene = new Phaser.Point(0, player.y)
+                    if (c.x <= player.x){
+                        end = new Phaser.Point(0, player.y)
                     }
                     else{
-                        end = new Phaser.Point(this.game.widthplayer.y)
+                        end = new Phaser.Point(this.game.width, player.y)
                     }
                 }
                 
@@ -371,9 +379,8 @@ buildMap = function(){
 //x, y, length(in Walls), boolean vertical, border(1 left, 2 right, 3 up, 4 down)
 makeWall = function(x, y, l, v, b){
     lwall = new Wall(game, x + 5, y + 5, 'wall');
-    var scalex, scaley;
-    scalex = .8 + (!v * l - !v);
-    scaley = .8 + (v * l - v);
+    lwall.scale.x = .8 + (!v * l - !v);
+    lwall.scale.y = .8 + (v * l - v);
 
     for(var n = 0; n < l; n++){
         wall = new Wall(game, x + (n * 72 * (!v)), y + (n * 56 * v), 'wall');
@@ -383,27 +390,39 @@ makeWall = function(x, y, l, v, b){
     switch (b){
         case 1:{
             lwall.x -= 15; 
-            scalex += .2;
+            lwall.scale.x += .2;
             break;
         }
         case 2:{ 
-            scalex += .2;
+            lwall.scale.x += .2;
             break;
         }
         case 3:{
             lwall.y -= 12;
-            scaley += .2;
+            lwall.scale.y += .2;
             break;
         }
         case 4:{
-            scaley += .2;
+            lwall.scale.y += .2;
             break;
         }
         default:{
         }
     }
-    lwall.scale.x = scalex;
-    lwall.scale.y = scaley;
+    while(lwall.x + lwall.width > game.world.width){
+        lwall.scale.x -= .01;
+    }
+    while(lwall.x < 0){
+        lwall.x ++;
+        lwall.scale.x -= .01;
+    }
+    while(lwall.y + lwall.height > game.world.height){
+        lwall.scale.y -= .01;
+    }
+    while(lwall.y < 0){
+        lwall.y ++;
+        lwall.scale.y -= .01;
+    }
 
     lwalls.add(lwall);
 }
