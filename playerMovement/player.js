@@ -38,7 +38,7 @@ Player.prototype.update = function() {
 	}
 	
 	// left/right movement
-	if(a.isDown && this.body.velocity.x > -60){
+	if(a.isDown && this.body.velocity.x > -100){
 		this.body.velocity.x -= 10;
 	}
 	else if (d.isDown && this.body.velocity.x < 100){
