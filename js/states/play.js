@@ -48,7 +48,7 @@ Play.prototype = {
 
     update: function() {
         // fill the stage with darkness
-        console.log(this.bitmap)
+        //console.log(this.bitmap)
         this.bitmap.context.fillStyle = 'rgb(0, 0, 0)';
         this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
@@ -174,7 +174,7 @@ Play.prototype = {
             }
         
         }
-        console.log(points.length)
+        //console.log(points.length)
         
         // !!!!! The next 22 lines are copied directly from https://gamemechanicexplorer.com/#raycasting-3 with no modifications except to the light source
         // Now sort the points clockwise around the light
