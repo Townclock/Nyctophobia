@@ -17,12 +17,14 @@ window.onload = function() {
 var Load = function(game){};
 Load.prototype = {
     preload : function(){
-        game.load.path = 'assets/';
+        game.load.path = '../assets/Images/';
         game.load.image('title', 'Title.png');
-        game.load.image('player', 'triangle.png');
+        //game.load.image('player', 'triangle.png');
         game.load.image('wall', 'purplebrick.png');
-        game.load.image('monster', 'triangle2.png');
+        //game.load.image('monster', 'triangle2.png');
         game.load.image('circle', 'bitmapCircle.png');
+        game.load.image('torch', 'torch.png');
+        game.load.image('battery', 'battery.png');
     },
     create : function(){
     },
@@ -74,6 +76,8 @@ Play.prototype = {
     // ray casting code copied from https://gamemechanicexplorer.com/#raycasting-3
 
     preload : function() {
+        torchCount = 0;
+        batteryCount = 0;
     },
 
     create : function() {
@@ -85,9 +89,13 @@ Play.prototype = {
     
         player = new Player(game, 20, 20, 'player', null, walls);
         monster = new Monster(game, 250, 250, 'monster', null, walls);
+        torch = new Torch(game, 32, 128, 'torch', null, walls);
+        battery = new Battery(game, 32, 172, 'battery', null, walls);
 
         game.add.existing(player);
         game.add.existing(monster);
+        game.add.existing(torch);
+        game.add.existing(battery);
 
         // lightCircleImage
         lightCircle = game.add.image(player.x, player.y, 'circle')
@@ -425,6 +433,18 @@ makeWall = function(x, y, l, v, b){
 
     lwalls.add(lwall);
 }
+
+function torchAdd(player, torch){
+        torch.kill();
+        torchCount++;
+        console.log(torchCount);
+    }
+
+    function batteryAdd(player, battery){
+        battery.kill();
+        batteryCount++;
+        console.log(batteryCount);
+    }
 
 var GameOver = function(){};
 GameOver.prototype = {

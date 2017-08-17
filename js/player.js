@@ -3,6 +3,8 @@ var a;
 var s;
 var d;
 var vtotal;
+var torchCount = 0;
+var batteryCount = 0;
 
 function Player(game, x, y, key, frame, walls) {
 	Phaser.Sprite.call(this, game, x, y, key, frame);
@@ -21,6 +23,10 @@ Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
 	game.physics.arcade.collide(this, walls);
+
+	game.physics.arcade.overlap(this, torch, torchAdd, null, this);
+	game.physics.arcade.overlap(this, battery, batteryAdd, null, this);
+
 	this.rotation = game.physics.arcade.angleToPointer(this) + (Math.PI / 2);
 
 	player.x = (player.x + game.world.width) % game.world.width;
