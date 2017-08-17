@@ -1,4 +1,3 @@
-
 function Monster(game, x, y, key, frame, walls, player) {
     Phaser.Sprite.call(this, game, x, y, key, frame);
     game.physics.enable(this);
@@ -13,7 +12,7 @@ Monster.prototype.update = function() {
     game.physics.arcade.moveToObject(this, player, 100);
     this.rotation = game.physics.arcade.angleBetween(this, player) + (Math.PI / 2);
 
-    function destroyPlayer(player, monster){
+    function destroyPlayer(player, monster) {
         player.kill();
         game.state.start('GameOver');
     }
