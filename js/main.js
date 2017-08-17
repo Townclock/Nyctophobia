@@ -95,7 +95,7 @@ Play.prototype = {
         lights = game.add.group();
         //game, x, y, key, active
         light1 = new Light(game, player.x, player.y, 'torch', true);
-        light2 = new Light(game, 400, 400, 'torch', false);
+        light2 = new Light(game, 400, 400, 'torch', false, {});
         lights.add(light1);
         lights.add(light2);
 
@@ -138,6 +138,8 @@ Play.prototype = {
 
     update : function() {
         bmd.cls();
+        bmd.context.fillStyle = 'rgb(0,0,0)';
+        bmd.context.fillRect(0,0, this.game.width, this.game.height);
         // fill the stage with darkness
         console.log(this.bitmap)
         this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
@@ -334,24 +336,25 @@ lights.forEach(function(light){
         outerCircle.x = light.x;
         outerCircle.y = light.y;
         
-        var grd = bmd.context.createRadialGradient(innerCircle.x, innerCircle.y, innerCircle.radius, outerCircle.x, outerCircle.y, outerCircle.radius);
+        var grd = bmd.context.createRadialGradient(innerCircle.x, innerCircle.y, innerCircle.radius-100, outerCircle.x, outerCircle.y, outerCircle.radius);
         grd.addColorStop(0, '#FFFFFF');
-        grd.addColorStop(1, '#000000');
+        grd.addColorStop(1, 'rgba(255, 200, 80, .4)');
             
         bmd.circle(outerCircle.x, outerCircle.y, outerCircle.radius, grd);
     	
 }, this);
 
-lights.forEach = function(light){
+lights.forEach( function(light){
         innerCircle.x = light.x;
         innerCircle.y = light.y;
         
+        console.log("non finite???   " + light)
         var grd = bmd.context.createRadialGradient(innerCircle.x, innerCircle.y, 0, innerCircle.x, innerCircle.y, innerCircle.radius);
-        grd.addColorStop(0, '#FFFFFF');
-        grd.addColorStop(1, '#FFFFFF');
+        //grd.addColorStop(0, '#FFFFFF');
+        //grd.addColorStop(1, '#FFFFFF');
             
         bmd.circle(innerCircle.x, innerCircle.y, innerCircle.radius, grd);
-}
+})
     /*
         // difficult code for nearby light
         // currently using sprite instead
