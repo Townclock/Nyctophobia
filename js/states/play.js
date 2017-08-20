@@ -17,7 +17,7 @@ Play.prototype = {
         buildMap(walls, lwalls);
     
         player = new Player(game, 20, 20, 'player', null, walls);
-        monster = new Monster(game, 250, 250, 'monster', null, walls);
+        //monster = new Monster(game, 250, 250, 'monster', null, walls);
         torch = new Torch(game, 32, 128, 'torch', null, walls);
         battery = new Battery(game, 32, 172, 'battery', null, walls);
 
@@ -76,7 +76,7 @@ Play.prototype = {
         bmd.context.fillStyle = 'rgb(0,0,0)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
-        console.log(this.bitmap)
+        //console.log(this.bitmap)
         this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
         
@@ -214,7 +214,7 @@ lights.forEach(function(light){
             }
         
         }
-        console.log(points.length)
+        //console.log(points.length)
         
         // !!!!! The next 22 lines are copied directly from https://gamemechanicexplorer.com/#raycasting-3 with no modifications except to the light source
         // Now sort the points clockwise around the light
@@ -298,7 +298,7 @@ lights.forEach(function(light){
     }
 };
 
-getWallIntersection =  function (ray, wall_group){
+getWallIntersection = function (ray, wall_group){
     var distanceToWall = Number.POSITIVE_INFINITY;
     var closestIntersection = null;
 
