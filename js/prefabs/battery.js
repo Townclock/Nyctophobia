@@ -1,3 +1,4 @@
+//create battery object
 function Battery(game, x, y, key, frame) {
 	Phaser.Sprite.call(this, game, x, y, key, frame);
 	game.physics.enable(this);

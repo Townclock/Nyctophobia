@@ -1,3 +1,4 @@
+//create wall object
 function Wall(game, x, y, key, frame) {
 	Phaser.Sprite.call(this, game, x, y, key, frame);
 	game.physics.enable(this);

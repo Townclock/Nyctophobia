@@ -1,7 +1,7 @@
+// ray casting code copied from https://gamemechanicexplorer.com/#raycasting-3
 var Play = function(game) {};
 
 Play.prototype = {
-    // ray casting code copied from https://gamemechanicexplorer.com/#raycasting-3
 
     preload: function() {
         torchCount = 0;
@@ -271,8 +271,6 @@ getWallIntersection =  function (ray, wall_group){
     }
     }, this);
     return closestIntersection;
-
-
 }
 
 buildMap = function(){
@@ -362,13 +360,15 @@ makeWall = function(x, y, l, v, b){
     lwalls.add(lwall);
 }
 
-function torchAdd(player, torch){
+//pick up torch function
+function torchAdd(player, torch) {
     torch.kill();
     torchCount++;
     console.log(torchCount);
 }
 
-function batteryAdd(player, battery){
+//pick up battery function
+function batteryAdd(player, battery) {
     battery.kill();
     batteryCount++;
     console.log(batteryCount);

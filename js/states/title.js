@@ -6,6 +6,8 @@ Title.prototype = {
     },
 
     create: function() {
+
+        //draw title image
         titleImage = game.add.image(game.world.centerX, game.world.centerY, 'title');
         titleImage.anchor.setTo(.5, .5);
         titleImage.alpha = 0;
@@ -14,6 +16,8 @@ Title.prototype = {
     },
     
     update: function() {
+
+        //title image flicker effect
         if (f < -1) {
             f++;
         } else if (f === -1) {
@@ -29,6 +33,8 @@ Title.prototype = {
             titleImage.alpha = Math.random();
             f--;
         }
+
+        //switch to Play state on left mouse button press
         if (game.input.activePointer.leftButton.isDown) {
             game.state.start('Play');
         }
