@@ -8,8 +8,10 @@ var batteryCount = 0;
 
 function Player(game, x, y, key, frame, walls) {
 	Phaser.Sprite.call(this, game, x, y, key, frame);
+	this.animations.add('walk');
 	game.physics.enable(this);
 	this.enableBody = true;
+	this.body.setSize(40, 40, 20, 35);
 	this.anchor.set(.5);
 
 	w = game.input.keyboard.addKey(Phaser.Keyboard.W);
@@ -29,8 +31,8 @@ Player.prototype.update = function() {
 
 	this.rotation = game.physics.arcade.angleToPointer(this) + (Math.PI / 2);
 
-	player.x = (player.x + game.world.width) % game.world.width;
-	player.y = (player.y + game.world.height) % game.world.height;
+	this.x = (this.x + game.world.width) % game.world.width;
+	this.y = (this.y + game.world.height) % game.world.height;
 	
 	// up/down movement
 	if(w.isDown && this.body.velocity.y > -200){
@@ -60,6 +62,12 @@ Player.prototype.update = function() {
 		this.body.velocity.x -= 10;
 	}
 	
+	if (this.body.velocity.x != 0 || this.body.velocity.y != 0)
+		this.animations.play('walk', 10, true);
+	else{
+		this.animations.stop();
+		this.frame = 0;
+	}
 	//total speed capped at 200
 	vtotal = Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y);
 	while(vtotal > 200){
