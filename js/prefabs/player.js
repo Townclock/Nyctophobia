@@ -10,6 +10,8 @@ function Player(game, x, y, key, frame, walls) {
 	a = game.input.keyboard.addKey(Phaser.Keyboard.A);
 	s = game.input.keyboard.addKey(Phaser.Keyboard.S);
 	d = game.input.keyboard.addKey(Phaser.Keyboard.D);
+
+	this.animations.add('walking', [0, 1, 2, 3, 4, 5], 6, true, true);
 }
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);  
@@ -61,5 +63,12 @@ Player.prototype.update = function() {
 			this.body.velocity.y > 0 ? this.body.velocity.y-- : this.body.velocity.y++;
 		}
 		vtotal--;
+	}
+
+	if(this.body.velocity.x != 0 || this.body.velocity.y != 0) {
+		this.animations.play('walking');
+	} else {
+		this.animations.stop();
+		this.frame = 0;
 	}
 }

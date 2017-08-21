@@ -89,198 +89,198 @@ Play.prototype = {
             new Phaser.Point(0, this.game.world.height)
         ];*/
         
-lights.forEach(function(light){
-        var stageCorners = [];
-        
-        ncircle = new Phaser.Circle(light.x, light.y, 300);
-        
-        for (var x = 0; x < 64; x++){
-            stageCorners.push(ncircle.circumferencePoint((Math.PI/32) * x));
-        }
-        // ray cast through the corners of the walls
-        var points = [];
-        var ray = null;
-        var intersect;
-        var i;
-        lwalls.forEach(function(wall){
-            var corners = [
-                new Phaser.Point(wall.x + 0.1 , wall.y + 0.1),
-                new Phaser.Point(wall.x - 0.1 , wall.y - 0.1),
-                
-                new Phaser.Point(wall.x - 0.1 + wall.width, wall.y + 0.1),
-                new Phaser.Point(wall.x + 0.1 + wall.width, wall.y - 0.1),
-
-                new Phaser.Point(wall.x - 0.1 + wall.width , wall.y - 0.1 + wall.height),
-                new Phaser.Point(wall.x + 0.1 + wall.width , wall.y + 0.1 + wall.height),
+        lights.forEach(function(light){
+            var stageCorners = [];
             
-                new Phaser.Point(wall.x + 0.1 , wall.y - 0.1 + wall.height),
-                new Phaser.Point(wall.x - 0.1 , wall.y + 0.1 + wall.height)
-            ]
-        // calculate the rays through the edges to the end of the stage
-            for( i = 0; i < corners.length; i++){
-                var c = corners[i];
+            ncircle = new Phaser.Circle(light.x, light.y, 300);
+            
+            for (var x = 0; x < 64; x++){
+                stageCorners.push(ncircle.circumferencePoint((Math.PI/32) * x));
+            }
+            // ray cast through the corners of the walls
+            var points = [];
+            var ray = null;
+            var intersect;
+            var i;
+            lwalls.forEach(function(wall){
+                var corners = [
+                    new Phaser.Point(wall.x + 0.1 , wall.y + 0.1),
+                    new Phaser.Point(wall.x - 0.1 , wall.y - 0.1),
+                    
+                    new Phaser.Point(wall.x - 0.1 + wall.width, wall.y + 0.1),
+                    new Phaser.Point(wall.x + 0.1 + wall.width, wall.y - 0.1),
 
-                //quoted directly from source
-                // "Here comes the linear algebra.
-                // The equation for a line is y = slope * x + b
-                // b is where the line crosses the left edge of the stage"
-
-                var slope = (c.y - light.y) / (c.x - light.x)
-                var b = light.y - slope * light.x;
-
-                var end = null;
-
-
-                if (c.x === light.x){   // if lights are beneath one of the four corners
-                    if (c.y <= light.y){
-                        end = new Phaser.Point(light.x, 0)
-                    }
-                    else {
-                        end = new Phaser.Point(light, this.game.world.height);
-                    }
-                }
-                else if (c.y === light.y){ //light is horizontal to a corner
-                    if (c.x <= light.x){
-                        end = new Phaser.Point(0, light.y)
-                    }
-                    else{
-                        end = new Phaser.Point(this.game.world.width, light.y)
-                    }
-                }
+                    new Phaser.Point(wall.x - 0.1 + wall.width , wall.y - 0.1 + wall.height),
+                    new Phaser.Point(wall.x + 0.1 + wall.width , wall.y + 0.1 + wall.height),
                 
-                else {     //base case
-                    // find the point where the line crosses the edge
-                    var left = new Phaser.Point(0, b);
-                    var right = new Phaser.Point(this.game.world.width, slope * this.game.world.width + b);
-                    var top = new Phaser.Point(-b/slope, 0);
-                    var bottom = new Phaser.Point((this.game.world.height-b)/slope, this.game.world.height);
+                    new Phaser.Point(wall.x + 0.1 , wall.y - 0.1 + wall.height),
+                    new Phaser.Point(wall.x - 0.1 , wall.y + 0.1 + wall.height)
+                ]
+            // calculate the rays through the edges to the end of the stage
+                for( i = 0; i < corners.length; i++){
+                    var c = corners[i];
 
-                    // get the actual intersections
-                    if (c.y <= light.y && c.x >= light.x){
-                        if (top.x >= 0 && top.x <= this.game.world.width){
-                            end = top;
-                        } else
-                        {
-                          end = right;
+                    //quoted directly from source
+                    // "Here comes the linear algebra.
+                    // The equation for a line is y = slope * x + b
+                    // b is where the line crosses the left edge of the stage"
+
+                    var slope = (c.y - light.y) / (c.x - light.x)
+                    var b = light.y - slope * light.x;
+
+                    var end = null;
+
+
+                    if (c.x === light.x){   // if lights are beneath one of the four corners
+                        if (c.y <= light.y){
+                            end = new Phaser.Point(light.x, 0)
                         }
-                    } else if(c.y <= light.y && c.x <= light.x){
-                        if (top.x >= 0 && top.x <= this.game.world.width){
-                            end = top;
+                        else {
+                            end = new Phaser.Point(light, this.game.world.height);
+                        }
+                    }
+                    else if (c.y === light.y){ //light is horizontal to a corner
+                        if (c.x <= light.x){
+                            end = new Phaser.Point(0, light.y)
                         }
                         else{
-                            end = left;
+                            end = new Phaser.Point(this.game.world.width, light.y)
                         }
-                    } else if (c.y >= light.y && c.x >= light.x){
-                        if (bottom.x >= 0 && bottom.x <= this.game.world.width){
-                            end = bottom;
-                        }else{
-                            end = right;
-                        }
-                    } else if (c.y >= light.y && c.x <= light.x) {
-                        if (bottom.x >= 0 && bottom.x <= this.game.world.width) {
-                            end = bottom;
-                        } else {
-                            end = left;
-                        }
+                    }
                     
-                    }  
-                }
+                    else {     //base case
+                        // find the point where the line crosses the edge
+                        var left = new Phaser.Point(0, b);
+                        var right = new Phaser.Point(this.game.world.width, slope * this.game.world.width + b);
+                        var top = new Phaser.Point(-b/slope, 0);
+                        var bottom = new Phaser.Point((this.game.world.height-b)/slope, this.game.world.height);
 
-                // create the ray
-                ray = new Phaser.Line(light.x, light.y, end.x, end.y); 
+                        // get the actual intersections
+                        if (c.y <= light.y && c.x >= light.x){
+                            if (top.x >= 0 && top.x <= this.game.world.width){
+                                end = top;
+                            } else
+                            {
+                              end = right;
+                            }
+                        } else if(c.y <= light.y && c.x <= light.x){
+                            if (top.x >= 0 && top.x <= this.game.world.width){
+                                end = top;
+                            }
+                            else{
+                                end = left;
+                            }
+                        } else if (c.y >= light.y && c.x >= light.x){
+                            if (bottom.x >= 0 && bottom.x <= this.game.world.width){
+                                end = bottom;
+                            }else{
+                                end = right;
+                            }
+                        } else if (c.y >= light.y && c.x <= light.x) {
+                            if (bottom.x >= 0 && bottom.x <= this.game.world.width) {
+                                end = bottom;
+                            } else {
+                                end = left;
+                            }
+                        
+                        }  
+                    }
+
+                    // create the ray
+                    ray = new Phaser.Line(light.x, light.y, end.x, end.y); 
+                    
+                    // check if it intercepts with wall global function
+                    intersect = getWallIntersection(ray, lwalls);
+                    if (intersect){
+                        points.push(intersect)
+                    }
+                    else {
+                        points.push(ray.end);
+                    }
                 
-                // check if it intercepts with wall global function
-                intersect = getWallIntersection(ray, lwalls);
-                if (intersect){
-                    points.push(intersect)
                 }
-                else {
-                    points.push(ray.end);
+            }, this)
+
+            // we need to add the corners of the screen to our point set if they are not in shadow
+            for (i = 0; i <stageCorners.length; i++){
+                ray = new Phaser.Line(light.x, light.y, stageCorners[i].x, stageCorners[i].y);
+                intersect = getWallIntersection(ray, lwalls)
+                if (!intersect){
+                //corner is in light
+                    points.push(stageCorners[i]);
+                }
+                else{
+                    points.push(intersect);
                 }
             
             }
-        }, this)
-
-        // we need to add the corners of the screen to our point set if they are not in shadow
-        for (i = 0; i <stageCorners.length; i++){
-            ray = new Phaser.Line(light.x, light.y, stageCorners[i].x, stageCorners[i].y);
-            intersect = getWallIntersection(ray, lwalls)
-            if (!intersect){
-            //corner is in light
-                points.push(stageCorners[i]);
-            }
-            else{
-                points.push(intersect);
-            }
-        
-        }
-        //console.log(points.length)
-        
-        // !!!!! The next 22 lines are copied directly from https://gamemechanicexplorer.com/#raycasting-3 with no modifications except to the light source
-        // Now sort the points clockwise around the light
-        // Sorting is required so that the points are connected in the right order.
-        //
-        // This sorting algorithm was copied from Stack Overflow:
-        // http://stackoverflow.com/questions/6989100/sort-points-in-clockwise-order
-        //
-        // Here's a pseudo-code implementation if you want to code it yourself:
-        // http://en.wikipedia.org/wiki/Graham_scan
-        var center = { x: light.x, y: light.y };
-        points = points.sort(function(a, b) {
-            if (a.x - center.x >= 0 && b.x - center.x < 0)
-                return 1;
-            if (a.x - center.x < 0 && b.x - center.x >= 0)
-                return -1;
-            if (a.x - center.x === 0 && b.x - center.x === 0) {
-                if (a.y - center.y >= 0 || b.y - center.y >= 0)
+            //console.log(points.length)
+            
+            // !!!!! The next 22 lines are copied directly from https://gamemechanicexplorer.com/#raycasting-3 with no modifications except to the light source
+            // Now sort the points clockwise around the light
+            // Sorting is required so that the points are connected in the right order.
+            //
+            // This sorting algorithm was copied from Stack Overflow:
+            // http://stackoverflow.com/questions/6989100/sort-points-in-clockwise-order
+            //
+            // Here's a pseudo-code implementation if you want to code it yourself:
+            // http://en.wikipedia.org/wiki/Graham_scan
+            var center = { x: light.x, y: light.y };
+            points = points.sort(function(a, b) {
+                if (a.x - center.x >= 0 && b.x - center.x < 0)
                     return 1;
-                return -1;
-            }
+                if (a.x - center.x < 0 && b.x - center.x >= 0)
+                    return -1;
+                if (a.x - center.x === 0 && b.x - center.x === 0) {
+                    if (a.y - center.y >= 0 || b.y - center.y >= 0)
+                        return 1;
+                    return -1;
+                }
 
-            // Compute the cross product of vectors (center -> a) x (center -> b)
-            var det = (a.x - center.x) * (b.y - center.y) - (b.x - center.x) * (a.y - center.y);
-            if (det < 0)
+                // Compute the cross product of vectors (center -> a) x (center -> b)
+                var det = (a.x - center.x) * (b.y - center.y) - (b.x - center.x) * (a.y - center.y);
+                if (det < 0)
+                    return 1;
+                if (det > 0)
+                    return -1;
+
+                // Points a and b are on the same line from the center
+                // Check which point is closer to the center
+                var d1 = (a.x - center.x) * (a.x - center.x) + (a.y - center.y) * (a.y - center.y);
+                var d2 = (b.x - center.x) * (b.x - center.x) + (b.y - center.y) * (b.y - center.y);
                 return 1;
-            if (det > 0)
-                return -1;
-
-            // Points a and b are on the same line from the center
-            // Check which point is closer to the center
-            var d1 = (a.x - center.x) * (a.x - center.x) + (a.y - center.y) * (a.y - center.y);
-            var d2 = (b.x - center.x) * (b.x - center.x) + (b.y - center.y) * (b.y - center.y);
-            return 1;
-        });
+            });
 
 
-        // connect the dots of visible space and fill them with white.
-        // through the mask, this should make everything in that space visible
+            // connect the dots of visible space and fill them with white.
+            // through the mask, this should make everything in that space visible
 
 
 
 
-        this.bitmap.context.beginPath();
-        this.bitmap.context.fillStyle = 'rgb(255,255,255)';
-        this.bitmap.context.moveTo(points[0].x, points[0].y);
-        for (var j = 0; j < points.length; j++){
-            this.bitmap.context.lineTo(points[j].x, points[j].y);
-        }    
-        this.bitmap.context.closePath();
-        this.bitmap.context.fill();
-        
-        innerCircle.x = light.x;
-        innerCircle.y = light.y;
-        outerCircle.x = light.x;
-        outerCircle.y = light.y;
-        
-        var grd = bmd.context.createRadialGradient(innerCircle.x, innerCircle.y, innerCircle.radius-100, outerCircle.x, outerCircle.y, outerCircle.radius);
-        grd.addColorStop(0, '#FFFFFF');
-        grd.addColorStop(1, 'rgba(255, 200, 80, .2)');
+            this.bitmap.context.beginPath();
+            this.bitmap.context.fillStyle = 'rgb(255,255,255)';
+            this.bitmap.context.moveTo(points[0].x, points[0].y);
+            for (var j = 0; j < points.length; j++){
+                this.bitmap.context.lineTo(points[j].x, points[j].y);
+            }    
+            this.bitmap.context.closePath();
+            this.bitmap.context.fill();
             
-        bmd.circle(outerCircle.x, outerCircle.y, outerCircle.radius, grd);
-        
-}, this);
+            innerCircle.x = light.x;
+            innerCircle.y = light.y;
+            outerCircle.x = light.x;
+            outerCircle.y = light.y;
+            
+            var grd = bmd.context.createRadialGradient(innerCircle.x, innerCircle.y, innerCircle.radius-100, outerCircle.x, outerCircle.y, outerCircle.radius);
+            grd.addColorStop(0, '#FFFFFF');
+            grd.addColorStop(1, 'rgba(255, 200, 80, .2)');
+                
+            bmd.circle(outerCircle.x, outerCircle.y, outerCircle.radius, grd);
+            
+        }, this);
 
-    /*
+        /*
         // difficult code for nearby light
         // currently using sprite instead
         this.bitmap.context.beginPath();
@@ -288,17 +288,21 @@ lights.forEach(function(light){
         this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
         this.bitmap.context.closePath();
         this.bitmap.context.fill();
-    */
+        */
         // This just tells the engine it should update the texture cache
         this.bitmap.dirty = true;
         //this.rayBitmap.dirty = true;
 
         //lightCircle.x = player.x;
         //lightCircle.y = player.y;
+    },
+
+    render: function() {
+        //game.debug.body(player);
     }
 };
 
-getWallIntersection = function (ray, wall_group){
+getWallIntersection = function (ray, wall_group) {
     var distanceToWall = Number.POSITIVE_INFINITY;
     var closestIntersection = null;
 
@@ -330,11 +334,9 @@ getWallIntersection = function (ray, wall_group){
     }
     
     return closestIntersection;
-
-
 }
 
-buildMap = function(){
+buildMap = function() {
     //world bounds
     for(var x = 0; x < 23; x++){
         wall = new Wall(game, x * 72, -50, 'wall');
@@ -371,7 +373,7 @@ buildMap = function(){
 
 //makes a wall and its lightwall
 //x, y, length(in Walls), boolean vertical, border(1 left, 2 right, 3 up, 4 down)
-makeWall = function(x, y, l, v, b){
+makeWall = function (x, y, l, v, b) {
     lwall = new Wall(game, x + 5, y + 5, 'wall');
     lwall.scale.x = .8 + (!v * l - !v);
     lwall.scale.y = .8 + (v * l - v);
@@ -422,14 +424,14 @@ makeWall = function(x, y, l, v, b){
 }
 
 //pick up torch function
-function torchAdd(player, torch) {
+torchAdd = function (player, torch) {
     torch.kill();
     torchCount++;
     console.log(torchCount);
 }
 
 //pick up battery function
-function batteryAdd(player, battery) {
+batteryAdd = function (player, battery) {
     battery.kill();
     batteryCount++;
     console.log(batteryCount);
