@@ -11,6 +11,7 @@ Load.prototype = {
         game.load.image('circle', 'bitmapCircle.png');
         game.load.image('torch', 'torch.png');
         game.load.image('battery', 'battery(s).png');
+        game.load.image('background', 'background.png');
     },
 
     create: function() {

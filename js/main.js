@@ -8,13 +8,17 @@ var previousPoints,
 	bmd,
 	lights,
 	ncircle,
+	scircle,
+	hcircle,
 	w,
 	a,
 	s,
 	d,
 	vtotal,
 	torchCount = 0,
-	batteryCount = 0;
+	batteryCount = 0,
+	active,
+	type;
 
 window.onload = function() {
     game = new Phaser.Game(800, 600, Phaser.AUTO);
