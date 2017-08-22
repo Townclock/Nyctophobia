@@ -11,7 +11,7 @@ var scircle;
 var hcircle;
 
 window.onload = function() {
-    game = new Phaser.Game(800, 600, Phaser.AUTO);
+    game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
     // define states
     game.state.add('Load', Load);
     game.state.add('Title', Title);
@@ -155,7 +155,13 @@ Play.prototype = {
     },
 
     update : function() {
-    	if(game.input.activePointer.leftButton.isDown){
+	// update ui with current torch and battery counts
+        document.getElementById("torchCount").innerHTML = torchCount;
+        document.getElementById("batteryCount").innerHTML = batteryCount;
+
+
+
+        if(game.input.activePointer.leftButton.isDown){
         	lights.children[0].type = 2;
     	}
     	else{

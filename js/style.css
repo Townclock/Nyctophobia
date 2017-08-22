@@ -1,0 +1,31 @@
+/*  original style by alexprice.co */
+/* modified to use as part of ui and found note system */ 
+
+body {
+        margin: 0;
+        padding: 0;
+        background: #111;
+    }
+canvas {
+    float:left;
+    margin: auto;
+}
+#game {
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+.inventory {
+    color: #facade;
+    float: left;
+    width : 25%;
+    height :  200px;
+}
+
+.notes {
+    float: right;
+    width : 25%;
+    height :  200px;
+}
+
