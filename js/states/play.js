@@ -74,7 +74,7 @@ Play.prototype = {
         // create the bitmap
         this.rayBitmap = this.game.add.bitmapData(this.game.world.width, this.game.world.height);
         this.rayBitmapImage = this.game.add.image(0, 0, this.rayBitmap);
-        this.rayBitmapImage.visible = true;/**/
+        this.rayBitmapImage.visible = !true;/**/
         //game.world.scale.setTo(.5);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON);
     },
