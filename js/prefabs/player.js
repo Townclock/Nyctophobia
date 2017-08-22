@@ -4,8 +4,11 @@ function Player(game, x, y, key, frame, walls) {
 	this.animations.add('walk');
 	game.physics.enable(this);
 	this.enableBody = true;
-	this.body.setSize(40, 40, 20, 35);
+	//this.body.setSize(40, 40, 20, 35);
 	this.anchor.set(.5);
+
+    this.superX = 0;
+    this.superY = 0;
 
 	//mapping wasd keys
 	w = game.input.keyboard.addKey(Phaser.Keyboard.W);
@@ -23,14 +26,36 @@ Player.prototype.update = function() {
 	game.physics.arcade.collide(this, walls);
 
 	//collision with torch and battery
-	game.physics.arcade.overlap(this, torch, torchAdd, null, this);
+
+
+    game.physics.arcade.overlap(this, torch, torchAdd, null, this);
 	game.physics.arcade.overlap(this, battery, batteryAdd, null, this);
 
 	//enable player rotation
 	this.rotation = game.physics.arcade.angleToPointer(this) + (Math.PI / 2);
 
-	this.x = (this.x + game.world.width) % game.world.width;
-	this.y = (this.y + game.world.height) % game.world.height;
+
+    if (this.x > game.world.width){
+        this.superX += 1;
+	    this.x = (this.x + game.world.width) % game.world.width;
+        buildMap(''+ this.superX + this.superY);
+    }
+    if (this.x < 0){
+        this.superX -= 1;
+	    this.x = (this.x + game.world.width) % game.world.width;
+        buildMap(''+ this.superX + this.superY);
+    }
+    if (this.y > game.world.height){
+        this.superY += 1;
+        this.y = (this.y + game.world.height) % game.world.height;
+        buildMap(''+ this.superX + this.superY);
+    }
+    if (this.y < 0){
+        this.superY -= 1;
+        this.y = (this.y + game.world.height) % game.world.height;
+        buildMap(''+ this.superX + this.superY);
+    }
+
 	
 	//up/down movement
 	if(w.isDown && this.body.velocity.y > -200) {

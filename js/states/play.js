@@ -10,13 +10,13 @@ Play.prototype = {
 
     create: function() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.world.setBounds(0, 0, 1600, 1200);
+        game.world.setBounds(0, 0, 1440, 1200);
         var bg = game.add.image(0, 0, 'background');
         bg.scale.setTo(3.2);
         
         lwalls = game.add.group();
         walls = game.add.group();
-        buildMap(walls, lwalls);
+        buildMap('00');
     
         player = new Player(game, 20, 20, 'player', null, walls);
         //monster = new Monster(game, 250, 250, 'monster', null, walls);
@@ -32,7 +32,7 @@ Play.prototype = {
         light1 = new Light(game, player.x, player.y, 'torch', true, 2);
         light2 = new Light(game, 400, 400, 'torch', false, 1);
         lights.add(light1);
-        lights.add(light2);
+        //lights.add(light2);
         
         game.add.existing(player);
         // lightCircleImage
@@ -42,18 +42,24 @@ Play.prototype = {
 
 
         // bitmap for the light cones
-        this.bitmap = this.game.add.bitmapData(this.game.world.width, this.game.world.height);
+        this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
         this.bitmap.context.fillStyle = 'rgb(255,255,255)';
         this.bitmap.context.strokeStyle = 'rgb(255,255,255)';
-        var lightBitmap = this.game.add.image(0,0, this.bitmap);
+        lightBitmap = this.game.add.image(0,0, this.bitmap);
 
-        bmd = game.add.bitmapData(this.game.world.width, this.game.world.height);
+        lightBitmap.fixedToCamera = true;
+
+
+        bmd = game.add.bitmapData(this.game.width, this.game.height);
         bmd.context.fillStyle = 'rgb(255,255,255)';
         bmd.context.strokeStyle = 'rgb(255,255,255)';
-        var circleBitmap = game.add.image(0,0, bmd);
+
+
+        circleBitmap = game.add.image(0,0, bmd);
         //circleBitmap.visible = false;
         //lightBitmap.visible = false;
-        
+        circleBitmap.fixedToCamera = true;
+
         innerCircle = new Phaser.Circle(player.x, player.y, 200);
         outerCircle = new Phaser.Circle(player.x, player.y, 300);
         
@@ -68,28 +74,29 @@ Play.prototype = {
         // create the bitmap
         this.rayBitmap = this.game.add.bitmapData(this.game.world.width, this.game.world.height);
         this.rayBitmapImage = this.game.add.image(0, 0, this.rayBitmap);
-        this.rayBitmapImage.visible = false;/**/
+        this.rayBitmapImage.visible = true;/**/
         //game.world.scale.setTo(.5);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON);
     },
 
     update: function() {
-        if(game.input.activePointer.leftButton.isDown){
+
+       if(game.input.activePointer.leftButton.isDown){
             lights.children[0].type = 2;
         }
         else{
-            lights.children[0].type = 0;
+            lights.children[0].type = 2;
         }
         
         hcircle.x = player.x;
         hcircle.y = player.y;
         
         bmd.cls();
-        bmd.context.fillStyle = 'rgb(00, 00, 00)';
+        bmd.context.fillStyle = 'rgb(100, 100, 100)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         //console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
+        this.bitmap.context.fillStyle = 'rgb(100,100, 100)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
         
         
@@ -121,6 +128,10 @@ lights.forEach(function(light){
         var intersect;
         var i;
         lwalls.forEach(function(wall){
+        if (! wall.inCamera)
+        {
+            return;
+        }
             var corners = [
                 new Phaser.Point(wall.x + 0.1 , wall.y + 0.1),
                 new Phaser.Point(wall.x - 0.1 , wall.y - 0.1),
@@ -279,9 +290,9 @@ lights.forEach(function(light){
 
         this.bitmap.context.beginPath();
         this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-        this.bitmap.context.moveTo(points[0].x, points[0].y);
+        this.bitmap.context.moveTo(points[0].x - game.camera.x, points[0].y - game.camera.y);
         for (var j = 0; j < points.length; j++){
-            this.bitmap.context.lineTo(points[j].x, points[j].y);
+            this.bitmap.context.lineTo(points[j].x - game.camera.x, points[j].y - game.camera.y);
         }    
         this.bitmap.context.closePath();
         this.bitmap.context.fill();
@@ -310,9 +321,9 @@ lights.forEach(function(light){
             //bmd.context.arc(light.x, light.y, 1000, game.physics.arcade.angleToPointer(player) - Math.PI/8, game.physics.arcade.angleToPointer(player) + Math.PI/8, false);
             bmd.context.fillStyle = fs;
             //bmd.context.lineTo(light.x, light.y);
-            bmd.context.moveTo(points[0].x, points[0].y);
+            bmd.context.moveTo(points[0].x - game.camera.x, points[0].y - game.camera.y);
             for (var j = 0; j < points.length; j++){
-                bmd.context.lineTo(points[j].x, points[j].y);
+                bmd.context.lineTo(points[j].x - game.camera.x, points[j].y - game.camera.y);
             }    
             bmd.context.closePath();
             bmd.context.fill();
@@ -347,6 +358,8 @@ lights.forEach(function(light){
 
         //lightCircle.x = player.x;
         //lightCircle.y = player.y;
+        circleBitmap.x = game.camera.x; circleBitmap.y = game.camera.y;
+        lightBitmap.x = game.camera.x; lightBitmap.y = game.camera.y;
     },
 
 
@@ -389,9 +402,9 @@ getWallIntersection = function (ray, wall_group) {
     return closestIntersection;
 }
 
-buildMap = function() {
+buildMap = function(room) {
     //world bounds
-    for(var x = 0; x < 23; x++){
+/*    for(var x = 0; x < 23; x++){
         wall = new Wall(game, x * 72, -50, 'wall');
         walls.add(wall);
     }
@@ -404,35 +417,73 @@ buildMap = function() {
         walls.add(wall);
     }
     for(var y = 1; y < 22; y++){
-        wall = new Wall(game, game.world.width - 5, y * 56, 'wall');
+        wall = new Wall(game, game.world.width - 5, y, 'wall');
         walls.add(wall);
     }
-    //
-    
-    makeWall(100, 100, 7, false, 0);
-    makeWall(100, 156, 7, true, 3);
-    makeWall(260, game.world.height - 150, 3, true, 4);
-    makeWall(game.world.width - 150, 0, 5, true, 3);
-    makeWall(330, game.world.height - 150, 2, false, 1);
-    makeWall(530, game.world.height - 263, 5, true, 4);
-    makeWall(game.world.width - 220, 224, 1, false, 2);
-    makeWall(207, 45, 1, true, 4);
-    makeWall(407, 0, 1, true, 3);
-    makeWall(290, 450, 3, false, 0);
-    makeWall(352, 156, 2, true, 3);
-    makeWall(674, game.world.height - 208, 2, true, 3);
-    makeWall(602, game.world.height - 263, 2, false, 1);/**/
+  */
+    makeWall(1, 2, 3, true, 0);
+    walls.callAll('destroy');
+    while(walls.children.length){
+   walls.forEach(function(wall){
+        wall.destroy();
+    }, this);}
+    while(lwalls.children.length){
+    lwalls.forEach(function(wall){
+        wall.destroy();
+    }, this);}
+ switch(room){
+    case '00':
+        makeWall(2, 1, 4, true, 4);
+        makeWall(1, 5, 2, false, 1);
+        makeWall(0, 5, 5, true, 0);
+        makeWall(1, 9, 5, false, 1);
+        makeWall(3, 1, 8, false, 1);
+        makeWall(5, 4, 5, true, 4);
+        makeWall(6, 4, 2, false, 1);
+        makeWall(10, 2, 5, true, 3);
+        makeWall(7, 5, 5, true, 3);
+        makeWall(8, 9, 12, false, 1);
+        makeWall(11, 6, 9, false, 1);
+        break;
+
+    case '10':
+        makeWall(0, 6, 5, false, 0);
+        makeWall(0, 9, 7, false, 2);
+        makeWall(7, 3, 6, true, 4);
+        makeWall(3, 3, 4, false, 2);
+        makeWall(0, 0, 6, true, 4);
+        makeWall(1, 0, 10, false, 1);
+        makeWall(10, 1, 21, true, 3);
+        makeWall(7, 9, 13, true, 3);
+        break;
+    case '11':
+        makeWall(7, 0, 3, true, 0);
+        makeWall(10, 0, 3, true, 0);
+        makeWall(2, 2, 5, false, 2);
+        makeWall(11, 2, 5, false, 1);
+        makeWall(2, 3, 10, true, 3);
+        makeWall(15, 3, 10, true, 3);
+        makeWall(3, 12, 4, false, 1);
+        makeWall(10, 12, 5, false, 2);
+        makeWall(7, 12, 3, true, 4);
+        makeWall(7, 15, 5, false, 2);
+        makeWall(12, 13, 3, true, 3);
+        break;
+    default:
+    }
 }
 
 //makes a wall and its lightwall
 //x, y, length(in Walls), boolean vertical, border(1 left, 2 right, 3 up, 4 down)
 makeWall = function (x, y, l, v, b) {
-    lwall = new Wall(game, x + 5, y + 5, 'wall');
+    lwall = new Wall(game, x, y, 'wall');
+    lwall.x += 5;
+    lwall.y += 5;
     lwall.scale.x = .8 + (!v * l - !v);
     lwall.scale.y = .8 + (v * l - v);
 
     for(var n = 0; n < l; n++){
-        wall = new Wall(game, x + (n * 72 * (!v)), y + (n * 56 * v), 'wall');
+        wall = new Wall(game, x + (n * (!v)), y + (n * v), 'wall');
         walls.add(wall);
     }
 
