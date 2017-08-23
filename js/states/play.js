@@ -1,4 +1,4 @@
-// ray casting code copied from https://gamemechanicexplorer.com/#raycasting-3
+// ray casting code adapted from https://gamemechanicexplorer.com/#raycasting-3
 var Play = function(game) {};
 
 Play.prototype = {
@@ -18,7 +18,7 @@ Play.prototype = {
         walls = game.add.group();
         buildMap('00');
     
-        player = new Player(game, 20, 20, 'player', null, walls);
+        player = new Player(game, 160, 420, 'player', null, walls);
         //monster = new Monster(game, 250, 250, 'monster', null, walls);
         torch = new Torch(game, 32, 128, 'torch', null, walls);
         battery = new Battery(game, 32, 172, 'battery', null, walls);
@@ -29,10 +29,11 @@ Play.prototype = {
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        light1 = new Light(game, player.x, player.y, 'torch', true, 2);
-        light2 = new Light(game, 400, 400, 'torch', false, 1);
-        lights.add(light1);
-        //lights.add(light2);
+        glowstick = new Light(game, player.x, player.y, 'torch', false, 0);
+        flashlight = new Light(game, player.x, player.y, 'torch', true, 2);
+        //light2 = new Light(game, 500, 400, 'torch', false, 1);
+        lights.add(glowstick);
+        lights.add(flashlight);
         
         game.add.existing(player);
         // lightCircleImage
@@ -42,15 +43,15 @@ Play.prototype = {
 
 
         // bitmap for the light cones
-        this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
+        this.bitmap = this.game.add.bitmapData(this.game.world.width, this.game.world.height);
         this.bitmap.context.fillStyle = 'rgb(255,255,255)';
         this.bitmap.context.strokeStyle = 'rgb(255,255,255)';
         lightBitmap = this.game.add.image(0,0, this.bitmap);
 
-        lightBitmap.fixedToCamera = true;
+        //lightBitmap.fixedToCamera = true;
 
 
-        bmd = game.add.bitmapData(this.game.width, this.game.height);
+        bmd = game.add.bitmapData(this.game.world.width, this.game.world.height);
         bmd.context.fillStyle = 'rgb(255,255,255)';
         bmd.context.strokeStyle = 'rgb(255,255,255)';
         
@@ -58,7 +59,7 @@ Play.prototype = {
         circleBitmap = game.add.image(0,0, bmd);
         //circleBitmap.visible = false;
         //lightBitmap.visible = false;
-        circleBitmap.fixedToCamera = true;
+        //circleBitmap.fixedToCamera = true;
 
         innerCircle = new Phaser.Circle(player.x, player.y, 200);
         outerCircle = new Phaser.Circle(player.x, player.y, 300);
@@ -80,13 +81,6 @@ Play.prototype = {
     },
 
     update: function() {
-    
-       if(game.input.activePointer.leftButton.isDown){
-            lights.children[0].type = 2;
-        }
-        else{
-            lights.children[0].type = 2;
-        }
         
         hcircle.x = player.x;
         hcircle.y = player.y;
@@ -96,31 +90,28 @@ Play.prototype = {
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         //console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(100,100, 100)';
+        this.bitmap.context.fillStyle = 'rgb(200, 200, 200)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
         
         
 lights.forEach(function(light){
+if (light.charge > 0 && (light.active || light.type === 1)){
         var stageCorners = [];
-        if (light.type > 1){
-            scircle = new Phaser.Circle(light.x, light.y, 2);
-            stageCorners.push(scircle.circumferencePoint(Math.PI + game.physics.arcade.angleToPointer(player)));
-            ncircle = new Phaser.Circle(light.x, light.y, 2000);
-        
-            for (var x = 0; x <= 12; x++){
-                stageCorners.push(ncircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + ((Math.PI/48) * (x - 6))));
-            }
-        }
-        else{
-            var l = light.type > 0 ? 300 : 100;
-            ncircle = new Phaser.Circle(light.x, light.y, l);
-            
-            for (var x = 0; x < 64; x++){
-                stageCorners.push(ncircle.circumferencePoint((Math.PI/32) * x));
-            }
-            var s = light.type > 0 ? 300 : 100;
-            ncircle = new Phaser.Circle(light.x, light.y, s);
-        }
+        ncircle = new Phaser.Circle(light.x, light.y, light.radius * 2);
+		
+		if (light.type > 1){
+        	scircle = new Phaser.Circle(light.x, light.y, 2);
+        	stageCorners.push(scircle.circumferencePoint(Math.PI + game.physics.arcade.angleToPointer(player)));
+		
+			for (var x = 0; x <= 12; x++){
+				stageCorners.push(ncircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + ((Math.PI/48) * (x - 6))));
+			}
+		}
+		else{
+			for (var x = 0; x < 64; x++){
+				stageCorners.push(ncircle.circumferencePoint((Math.PI/32) * x));
+			}
+		}
         
         // ray cast through the corners of the walls
         var points = [];
@@ -217,8 +208,10 @@ lights.forEach(function(light){
 
                 // create the ray
                 ray = new Phaser.Line(light.x, light.y, end.x, end.y); 
-                if (Math.abs(((Math.PI * 2 + ray.angle) % (Math.PI * 2)) - (Math.PI * 2 + game.physics.arcade.angleToPointer(player)) % (Math.PI * 2)) < Math.PI/8 || light.type < 2){
-                    // check if it intercepts with wall global function
+                if (light.type < 2
+                	|| Math.abs(ray.angle - game.physics.arcade.angleToPointer(player)) < Math.PI/8
+                	|| Math.abs(((Math.PI * 2 + ray.angle) % (Math.PI * 2)) - (Math.PI * 2 + game.physics.arcade.angleToPointer(player)) % (Math.PI * 2)) < Math.PI/8 ){
+                	// check if it intercepts with wall global function
                     intersect = getWallIntersection(ray, lwalls);
                     if (intersect){
                         points.push(intersect)
@@ -290,9 +283,9 @@ lights.forEach(function(light){
 
         this.bitmap.context.beginPath();
         this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-        this.bitmap.context.moveTo(points[0].x - game.camera.x, points[0].y - game.camera.y);
+        this.bitmap.context.moveTo(points[0].x, points[0].y);
         for (var j = 0; j < points.length; j++){
-            this.bitmap.context.lineTo(points[j].x - game.camera.x, points[j].y - game.camera.y);
+            this.bitmap.context.lineTo(points[j].x, points[j].y);
         }    
         this.bitmap.context.closePath();
         this.bitmap.context.fill();
@@ -316,21 +309,21 @@ lights.forEach(function(light){
         
         var fs;
         if (light.type > 1){
-            fs = 'rgba(255, 255, 255, .5)';
+            fs = 'rgba(255, 255, 255, '+ light.lalpha + ')';
             bmd.context.beginPath();
             //bmd.context.arc(light.x, light.y, 1000, game.physics.arcade.angleToPointer(player) - Math.PI/8, game.physics.arcade.angleToPointer(player) + Math.PI/8, false);
             bmd.context.fillStyle = fs;
             //bmd.context.lineTo(light.x, light.y);
-            bmd.context.moveTo(points[0].x - game.camera.x, points[0].y - game.camera.y);
+            bmd.context.moveTo(points[0].x, points[0].y);
             for (var j = 0; j < points.length; j++){
-                bmd.context.lineTo(points[j].x - game.camera.x, points[j].y - game.camera.y);
+                bmd.context.lineTo(points[j].x, points[j].y);
             }    
             bmd.context.closePath();
             bmd.context.fill();
         }
         else{
             fs = light.type > 0 ? 'rgba(255, 200, 50, .2)' : 'rgba(50, 255, 100, .2)';
-            outerCircle.radius = light.type > 0 ? 150 : 50
+            outerCircle.radius = light.radius;
             
             var grd = bmd.context.createRadialGradient(innerCircle.x, innerCircle.y, innerCircle.radius-100, outerCircle.x, outerCircle.y, outerCircle.radius);
             grd.addColorStop(0, '#FFFFFF');
@@ -340,7 +333,7 @@ lights.forEach(function(light){
         }
         
        
-        
+}
 }, this);
 
     /*
@@ -358,8 +351,6 @@ lights.forEach(function(light){
 
         //lightCircle.x = player.x;
         //lightCircle.y = player.y;
-        circleBitmap.x = game.camera.x; circleBitmap.y = game.camera.y;
-        lightBitmap.x = game.camera.x; lightBitmap.y = game.camera.y;
     },
 
 

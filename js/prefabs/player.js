@@ -4,7 +4,7 @@ function Player(game, x, y, key, frame, walls) {
 	this.animations.add('walk');
 	game.physics.enable(this);
 	this.enableBody = true;
-	//this.body.setSize(40, 40, 20, 35);
+	this.body.setSize(40, 40, 20, 35);
 	this.anchor.set(.5);
 
     this.superX = 0;

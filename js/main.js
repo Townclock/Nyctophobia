@@ -1,7 +1,6 @@
 var game;
 
-var previousPoints,
-	player,
+var player,
 	f = 0,
 	innerCircle,
 	outerCircle,
@@ -16,9 +15,7 @@ var previousPoints,
 	d,
 	vtotal,
 	torchCount = 0,
-	batteryCount = 0,
-	active,
-	type;
+	batteryCount = 0;
 
 window.onload = function() {
     game = new Phaser.Game(800, 600, Phaser.AUTO);

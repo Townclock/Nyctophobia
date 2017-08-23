@@ -1,5 +1,5 @@
 //create enemy object
-function Monster(game, x, y, key, frame, walls, player) {
+function Monster(game, x, y, key, frame, walls) {
     Phaser.Sprite.call(this, game, x, y, key, frame);
     game.physics.enable(this);
     this.enableBody = true;
