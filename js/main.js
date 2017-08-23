@@ -15,7 +15,8 @@ var player,
 	d,
 	vtotal,
 	torchCount = 0,
-	batteryCount = 0;
+	batteryCount = 0
+	trace = [];
 
 window.onload = function() {
     game = new Phaser.Game(800, 600, Phaser.AUTO);

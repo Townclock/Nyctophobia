@@ -54,12 +54,13 @@ Play.prototype = {
         bmd = game.add.bitmapData(this.game.world.width, this.game.world.height);
         bmd.context.fillStyle = 'rgb(255,255,255)';
         bmd.context.strokeStyle = 'rgb(255,255,255)';
-        
-
         circleBitmap = game.add.image(0,0, bmd);
         //circleBitmap.visible = false;
         //lightBitmap.visible = false;
         //circleBitmap.fixedToCamera = true;
+        
+        tbm = game.add.bitmapData(this.game.world.width, this.game.world.height);
+        traceBitmap = game.add.image(0, 0, tbm);
 
         innerCircle = new Phaser.Circle(player.x, player.y, 200);
         outerCircle = new Phaser.Circle(player.x, player.y, 300);
@@ -81,16 +82,17 @@ Play.prototype = {
     },
 
     update: function() {
+    trace.push(new Phaser.Point(player.x, player.y));
         
         hcircle.x = player.x;
         hcircle.y = player.y;
         
         bmd.cls();
-        bmd.context.fillStyle = 'rgb(100, 100, 100)';
+        bmd.context.fillStyle = 'rgb(00, 00, 00)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         //console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(200, 200, 200)';
+        this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
         
         
@@ -349,6 +351,17 @@ if (light.charge > 0 && (light.active || light.type === 1)){
         this.bitmap.dirty = true;
         this.rayBitmap.dirty = true;
 
+		/*tbm.context.beginPath();
+        tbm.context.strokeStyle = 'rgb(255, 255, 255)';
+        tbm.context.fillStyle = 'rgb(255, 255, 255)';
+        tbm.context.moveTo(trace[0].x, trace[0].y);
+        for(var k = 0; k < trace.length; k++) {
+            tbm.context.lineTo(trace[k].x, trace[k].y);
+            tbm.context.fillRect(trace[k].x-2, trace[k].y-2, 4, 4);
+        }
+        tbm.context.stroke();
+        
+        tbm.dirty = true;*/
         //lightCircle.x = player.x;
         //lightCircle.y = player.y;
     },
