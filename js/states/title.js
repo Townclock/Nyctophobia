@@ -6,7 +6,7 @@ Title.prototype = {
     },
 
     create: function() {
-
+        game.world.setBounds(0, 0,800, 600);
         //draw title image
         titleImage = game.add.image(game.world.centerX, game.world.centerY, 'title');
         titleImage.anchor.setTo(.5, .5);
