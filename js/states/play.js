@@ -23,17 +23,17 @@ Play.prototype = {
         torch = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
         battery = new Battery(game, 400, 280, 0, 0, 'battery', null, walls);
 
-        //game.add.existing(monster);
+        game.add.existing(monster);
         game.add.existing(torch);
         game.add.existing(battery);
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        glowstick = new Light(game, player.x, player.y, 'torch', false, 0);
-        flashlight = new Light(game, player.x, player.y, 'torch', true, 2);
+        glowstick = new Light(game, player.x, player.y, 'torch', true, 0);
+        //flashlight = new Light(game, player.x, player.y, 'torch', true, 2);
         //light2 = new Light(game, 500, 400, 'torch', false, 1);
         lights.add(glowstick);
-        lights.add(flashlight);
+        //lights.add(flashlight);
         
         game.add.existing(player);
         // lightCircleImage
