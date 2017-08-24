@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 /assets/*
 *.DS_Store
-=======
-./assets/
-.DS_Store
 lighting/bitmapCircle.png
 lighting/inverseBitmapCircle.png
->>>>>>> modified .gitignore
