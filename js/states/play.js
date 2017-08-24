@@ -6,9 +6,19 @@ Play.prototype = {
     preload: function() {
         torchCount = 0;
         batteryCount = 0;
-    },
+		
+	},
 
     create: function() {
+		pauseButton = game.add.button(650, 25, 'pause', pauseState(),this);
+		game.paused = false;
+		//resumeButton = game.add.button(650, 25, 'resume', resumeState(),this);
+		/*
+		pauseButton.exists = false;
+		resumeButton.exists = false;
+		pauseButton.exists = true;
+*/
+		
         localObjects = game.add.group();
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -94,7 +104,7 @@ Play.prototype = {
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         //console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(0, 0, 0';
+        this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
         
         
@@ -362,6 +372,20 @@ if (light.charge > 0 && (light.active || light.type === 1)){
         //game.debug.body(player);
     }
 };
+
+function pauseState() {
+	game.paused = !game.state.paused;
+	//pauseButton.exists = false;
+	//resumeButton.exists = true;
+}
+
+/*function resumeState() {
+	game.state.resume();
+	resumeButton.exists = false;
+	pauseButton.exists = true;
+		
+}*/
+
 
 getWallIntersection = function (ray, wall_group) {
     var distanceToWall = Number.POSITIVE_INFINITY;

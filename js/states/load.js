@@ -12,9 +12,13 @@ Load.prototype = {
         game.load.image('torch', 'New size images/torch(s).png');
         game.load.image('battery', 'New size images/battery(s).png');
         game.load.image('background', 'background.png');
+		game.load.image('pause', 'pause.png');
+		game.load.image('resume', 'resume.png');
+		
     },
 
     create: function() {
+
     },
     
     update: function() {
