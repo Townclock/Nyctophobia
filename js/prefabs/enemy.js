@@ -1,9 +1,12 @@
 //create enemy object
-function Monster(game, x, y, key, frame, walls) {
+function Monster(game, x, y, superX, superY, key, frame, walls) {
     Phaser.Sprite.call(this, game, x, y, key, frame);
     game.physics.enable(this);
     this.enableBody = true;
     this.anchor.set(.5);
+
+    this.superX = superX;
+    this.superY = superY;
 }
 
 Monster.prototype = Object.create(Phaser.Sprite.prototype);  
@@ -37,4 +40,6 @@ Monster.prototype.update = function() {
     //checks player collision with enemy
     game.physics.arcade.collide(this, walls);
     game.physics.arcade.overlap(player, this, destroyPlayer, null, game);
+
+
 }

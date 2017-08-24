@@ -4,6 +4,9 @@ function Battery(game, x, y, superX, superY,  key, frame) {
 	game.physics.enable(this);
 	this.enableBody = true;
 	this.body.immovable = true;
+
+    this.superX = superX;
+    this.superY = superY;
 }
 
 Battery.prototype = Object.create(Phaser.Sprite.prototype);  

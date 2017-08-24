@@ -9,6 +9,8 @@ Play.prototype = {
     },
 
     create: function() {
+        localObjects = game.add.group();
+
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.world.setBounds(0, 0, 1440, 1200);
         var bg = game.add.image(0, 0, 'background');
@@ -16,16 +18,15 @@ Play.prototype = {
         
         lwalls = game.add.group();
         walls = game.add.group();
-        buildMap('00');
     
         player = new Player(game, 160, 420, 'player', null, walls);
-        monster = new Monster(game, 660, 685, 'monster', null, walls);
+        monster = new Monster(game, 660, 685, 1, 1, 'monster', null, walls);
         torch = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
-        battery = new Battery(game, 400, 280, 0, 0, 'battery', null, walls);
+        battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
 
-        game.add.existing(monster);
-        game.add.existing(torch);
-        game.add.existing(battery);
+        localObjects.add(monster);
+        localObjects.add(torch);
+        localObjects.add(battery);
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
@@ -78,6 +79,7 @@ Play.prototype = {
         this.rayBitmapImage.visible = !true;/**/
         //game.world.scale.setTo(.5);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON);
+        buildMap('00');
     },
 
     update: function() {
@@ -92,7 +94,7 @@ Play.prototype = {
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         //console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(200, 200, 200)';
+        this.bitmap.context.fillStyle = 'rgb(0, 0, 0';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
         
         
@@ -396,7 +398,19 @@ getWallIntersection = function (ray, wall_group) {
 }
 
 buildMap = function(room) {
-    //world bounds
+    localObjects.forEach(function(object){
+    console.log(object)
+        if (object.superX == player.superX && object.superY == player.superY){
+            object.exists = true;
+        }
+        else{
+            object.exists = false;
+        }
+    }, this)
+
+
+
+//world bounds
 /*    for(var x = 0; x < 23; x++){
         wall = new Wall(game, x * 72, -50, 'wall');
         walls.add(wall);
