@@ -11,3 +11,4 @@ function Battery(game, x, y, superX, superY,  key, frame) {
 
 Battery.prototype = Object.create(Phaser.Sprite.prototype);  
 Battery.prototype.constructor = Battery;
+

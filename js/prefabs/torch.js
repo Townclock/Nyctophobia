@@ -11,3 +11,4 @@ function Torch(game, x, y, superX, superY, key, frame) {
 
 Torch.prototype = Object.create(Phaser.Sprite.prototype);  
 Torch.prototype.constructor = Torch;
+
