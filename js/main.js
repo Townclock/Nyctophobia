@@ -18,8 +18,8 @@ var player,
 	batteryCount = 0;
 
 window.onload = function() {
-    game = new Phaser.Game(800, 600, Phaser.AUTO);
-
+    game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+    // define states
     game.state.add('Load', Load);
     game.state.add('Title', Title);
     game.state.add('Play', Play);

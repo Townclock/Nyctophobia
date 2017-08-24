@@ -19,9 +19,9 @@ Play.prototype = {
         buildMap('00');
     
         player = new Player(game, 160, 420, 'player', null, walls);
-        //monster = new Monster(game, 250, 250, 'monster', null, walls);
-        torch = new Torch(game, 32, 128, 'torch', null, walls);
-        battery = new Battery(game, 32, 172, 'battery', null, walls);
+        monster = new Monster(game, 660, 685, 'monster', null, walls);
+        torch = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
+        battery = new Battery(game, 400, 280, 0, 0, 'battery', null, walls);
 
         //game.add.existing(monster);
         game.add.existing(torch);
@@ -81,7 +81,9 @@ Play.prototype = {
     },
 
     update: function() {
-        
+        document.getElementById("torchCount").innerHTML = torchCount;
+        document.getElementById("batteryCount").innerHTML = batteryCount;
+
         hcircle.x = player.x;
         hcircle.y = player.y;
         
