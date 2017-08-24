@@ -9,6 +9,10 @@ Play.prototype = {
     },
 
     create: function() {
+        k1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+        k2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
+        k3 = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+
         localObjects = game.add.group();
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -30,11 +34,11 @@ Play.prototype = {
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        glowstick = new Light(game, player.x, player.y, 'torch', true, 0);
-        //flashlight = new Light(game, player.x, player.y, 'torch', true, 2);
+        glowstick = new Light(game, player.x, player.y, 'torch', false, 0);
+        flashlight = new Light(game, player.x, player.y, 'torch', true, 2);
         //light2 = new Light(game, 500, 400, 'torch', false, 1);
         lights.add(glowstick);
-        //lights.add(flashlight);
+        lights.add(flashlight);
         
         game.add.existing(player);
         // lightCircleImage
@@ -86,16 +90,49 @@ Play.prototype = {
         document.getElementById("torchCount").innerHTML = torchCount;
         document.getElementById("batteryCount").innerHTML = batteryCount;
 
+        if(k1.isDown && !lights.children[0].active){
+            for (var x = 0; x < lights.children.length; x++){
+                lights.children[x].active = false;
+            }
+            lights.children[0].active = true;
+        }
+        else if(k3.isDown && !lights.children[1].active){
+            if (lights.children[1].charge > 0){
+                for (var x = 0; x < lights.children.length; x++){
+                    lights.children[x].active = false;
+                }
+                lights.children[1].active = true;
+            }
+            else if (batteryCount > 0){
+                for (var x = 0; x < lights.children.length; x++){
+                    lights.children[x].active = false;
+                }
+                lights.children[1].charge = 100;
+                lights.children[1].active = true;
+                batteryCount --;
+            }
+        }
+        else if(k2.isDown && torchCount > 0){
+            for (var x = 0; x < lights.children.length; x++){
+                lights.children[x].active = false;
+            }
+            torch = new Light(game, 0, 0, 'torch', true, 1);
+            lights.add(torch);
+            torchCount--;
+        }
+
         hcircle.x = player.x;
         hcircle.y = player.y;
         
         bmd.cls();
-        bmd.context.fillStyle = 'rgb(100, 100, 100)';
+        bmd.context.fillStyle = 'rgb(00, 00, 00)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         //console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(0, 0, 0';
+        this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
+
+
         
         
 lights.forEach(function(light){

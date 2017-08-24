@@ -7,7 +7,7 @@ function Light(game, x, y, key, a, t) {
     this.fl = 0;
     switch (this.type){
     	case 0:
-    		this.radius = 50;
+    		this.radius = 75;
     		this.charge = 1;
     		break;
     	case 1:

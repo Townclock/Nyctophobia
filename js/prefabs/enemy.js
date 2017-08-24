@@ -17,8 +17,16 @@ Monster.prototype.update = function() {
 
     if (lights.length >= 0)
     {
-        var nearestLight = lights.getAt(0);
+        var nearestLight = null;
+        var x = 0;
+        while (nearestLight == null && x < lights.children.length){
+            if(lights.children[x].active === true){
+                nearestLight = lights.children[x];
+            }
+            x++;
+        }
         for(i = 1; i < lights.length; i++){
+            if(lights.children[i].active === true)
             if (Phaser.Math.distance(lights.getAt(i).x, lights.getAt(i).y, this.x, this.y) < Phaser.Math.distance(nearestLight.x, nearestLight.y, this.x, this.y)){
                 nearestLight = lights.getAt(i);
             }
