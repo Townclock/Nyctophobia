@@ -10,14 +10,6 @@ Play.prototype = {
 	},
 
     create: function() {
-		pauseButton = game.add.button(650, 25, 'pause', pauseState(),this);
-		game.paused = false;
-		//resumeButton = game.add.button(650, 25, 'resume', resumeState(),this);
-		/*
-		pauseButton.exists = false;
-		resumeButton.exists = false;
-		pauseButton.exists = true;
-*/
 		
         localObjects = game.add.group();
 
@@ -26,6 +18,33 @@ Play.prototype = {
         var bg = game.add.image(0, 0, 'background');
         bg.scale.setTo(3.2);
         
+
+        menu = game.add.image(100, 100, 'menu');
+        menu.exists = false;
+		pauseButton = game.add.button(650, 25, 'pause', function(){
+	        game.paused = !game.paused;
+            //console.log('paused:' + game.paused);
+            resumeButton.exists = true;
+            resumeButton.bringToTop();
+            pauseButton.exists = false;
+            menu.bringToTop();
+            menu.exists = true;
+            },this);
+		resumeButton = game.add.button(650, 25, 'resume', function(){
+            game.paused = !game.paused;
+            resumeButton.exists = false;
+            pauseButton.exists = true;
+            pauseButton.bringToTop();
+            menu.exists = false;
+            },this);
+        resumeButton.exists = false;
+
+        menu.fixedToCamera = true;
+        pauseButton.fixedToCamera = true;
+        resumeButton.fixedToCamera = true;
+
+
+
         lwalls = game.add.group();
         walls = game.add.group();
     
@@ -90,7 +109,9 @@ Play.prototype = {
         //game.world.scale.setTo(.5);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON);
         buildMap('00');
-    },
+
+    pauseButton.bringToTop();
+},
 
     update: function() {
         document.getElementById("torchCount").innerHTML = torchCount;

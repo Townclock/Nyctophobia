@@ -14,6 +14,7 @@ Load.prototype = {
         game.load.image('background', 'background.png');
 		game.load.image('pause', 'pause.png');
 		game.load.image('resume', 'resume.png');
+		game.load.image('menu', 'menu.png');
 		
     },
 
