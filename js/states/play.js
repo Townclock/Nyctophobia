@@ -4,8 +4,8 @@ var Play = function(game) {};
 Play.prototype = {
 
     preload: function() {
-        torchCount = 0;
-        batteryCount = 0;
+        torchCount = 10;
+        batteryCount = 10;
 		
 	},
 
@@ -52,7 +52,7 @@ Play.prototype = {
         walls = game.add.group();
     
         player = new Player(game, 160, 420, 'player', null, walls);
-        monster = new Monster(game, 660, 685, 1, 1, 'monster', null, walls);
+        monster = new Monster(game, 407, 573, 1, 1, 'monster', null, walls);
         torch = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
         battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
 
@@ -124,13 +124,17 @@ Play.prototype = {
             for (var x = 0; x < lights.children.length; x++){
                 lights.children[x].active = false;
             }
+            lights.children[0].x = player.x;
+            lights.children[0].y = player.y;
             lights.children[0].active = true;
         }
-        else if(k3.isDown && !lights.children[1].active){
+        else if(k3.isDown && (!lights.children[1].active || lights.children[1].charge === 0)){
             if (lights.children[1].charge > 0){
                 for (var x = 0; x < lights.children.length; x++){
                     lights.children[x].active = false;
                 }
+                lights.children[1].x = player.x;
+            	lights.children[1].y = player.y;
                 lights.children[1].active = true;
             }
             else if (batteryCount > 0){
@@ -143,27 +147,30 @@ Play.prototype = {
             }
         }
         else if(k2.isDown && torchCount > 0){
+            //var torch = 0;
             for (var x = 0; x < lights.children.length; x++){
+            	//if(lights.children[x].active = true && lights.children[x].type === 1){
+            	//	torch = 1;
+            	//	break;
+            	//}
                 lights.children[x].active = false;
             }
-            torch = new Light(game, 0, 0, 'torch', true, 1);
-            lights.add(torch);
-            torchCount--;
+            //if (!torch){
+            	torch = new Light(game, 0, 0, 'torch', true, 1);
+            	lights.add(torch);
+            	torchCount--;
+            //}
         }
 
         hcircle.x = player.x;
         hcircle.y = player.y;
         
         bmd.cls();
-        bmd.context.fillStyle = 'rgb(00, 00, 00)';
+        bmd.context.fillStyle = 'rgb(100, 100, 100)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         //console.log(this.bitmap)
-<<<<<<< HEAD
-        this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
-=======
-        this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
->>>>>>> pause
+        this.bitmap.context.fillStyle = 'rgb(200, 200, 200)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
 
 
@@ -516,7 +523,7 @@ buildMap = function(room) {
     makeWall(1, 2, 3, true, 0);
     walls.callAll('destroy');
     while(walls.children.length){
-   walls.forEach(function(wall){
+   		walls.forEach(function(wall){
         wall.destroy();
     }, this);}
     while(lwalls.children.length){
@@ -549,13 +556,13 @@ buildMap = function(room) {
         makeWall(7, 9, 13, true, 3);
         break;
     case '11':
-        makeWall(7, 0, 3, true, 0);
+        makeWall(7, 0, 2, true, 4);
         makeWall(10, 0, 3, true, 0);
-        makeWall(2, 2, 5, false, 2);
+        makeWall(3, 2, 5, false, 1);
         makeWall(11, 2, 5, false, 1);
-        makeWall(2, 3, 10, true, 3);
+        makeWall(2, 2, 10, true, 4);
         makeWall(15, 3, 10, true, 3);
-        makeWall(3, 12, 4, false, 1);
+        makeWall(2, 12, 5, false, 2);
         makeWall(10, 12, 5, false, 2);
         makeWall(7, 12, 3, true, 4);
         makeWall(7, 15, 5, false, 2);

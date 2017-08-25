@@ -4,7 +4,7 @@ function Player(game, x, y, key, frame, walls) {
 	this.animations.add('walk');
 	game.physics.enable(this);
 	this.enableBody = true;
-	this.body.setSize(40, 40, 20, 35);
+	//this.body.setSize(40, 40, 20, 35);
 	this.anchor.set(.5);
 
     this.superX = 0;
@@ -90,7 +90,7 @@ Player.prototype.update = function() {
 	}
 
 	//total speed capped at 200
-	vtotal = Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y);
+	var vtotal = Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y);
 	while (vtotal > 200) {
 		if (Math.abs(this.body.velocity.x) > Math.abs(this.body.velocity.y)) {
 			this.body.velocity.x > 0 ? this.body.velocity.x-- : this.body.velocity.x++;

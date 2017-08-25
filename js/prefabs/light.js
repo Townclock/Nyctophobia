@@ -5,6 +5,8 @@ function Light(game, x, y, key, a, t) {
     this.active = a;
     this.type = t;
     this.fl = 0;
+    this.superX = player.superX;
+    this.superY = player.superY;
     switch (this.type){
     	case 0:
     		this.radius = 75;
@@ -36,6 +38,8 @@ Light.prototype.update = function() {
 		this.y = point.y;
 		this.rotation = game.physics.arcade.angleToPointer(player) + (Math.PI / 2);
 		this.visible = true;
+		this.superX = player.superX;
+		this.superY = player.superY;
 	}
 	else{
 		if(this.type != 1){
