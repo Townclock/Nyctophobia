@@ -6,7 +6,8 @@ Play.prototype = {
     preload: function() {
         torchCount = 0;
         batteryCount = 0;
-    },
+		
+	},
 
     create: function() {
         k1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -20,6 +21,33 @@ Play.prototype = {
         var bg = game.add.image(0, 0, 'background');
         bg.scale.setTo(3.2);
         
+
+        menu = game.add.image(100, 100, 'menu');
+        menu.exists = false;
+		pauseButton = game.add.button(650, 25, 'pause', function(){
+	        game.paused = !game.paused;
+            //console.log('paused:' + game.paused);
+            resumeButton.exists = true;
+            resumeButton.bringToTop();
+            pauseButton.exists = false;
+            menu.bringToTop();
+            menu.exists = true;
+            },this);
+		resumeButton = game.add.button(650, 25, 'resume', function(){
+            game.paused = !game.paused;
+            resumeButton.exists = false;
+            pauseButton.exists = true;
+            pauseButton.bringToTop();
+            menu.exists = false;
+            },this);
+        resumeButton.exists = false;
+
+        menu.fixedToCamera = true;
+        pauseButton.fixedToCamera = true;
+        resumeButton.fixedToCamera = true;
+
+
+
         lwalls = game.add.group();
         walls = game.add.group();
     
@@ -84,7 +112,9 @@ Play.prototype = {
         //game.world.scale.setTo(.5);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON);
         buildMap('00');
-    },
+
+    pauseButton.bringToTop();
+},
 
     update: function() {
         document.getElementById("torchCount").innerHTML = torchCount;
@@ -129,7 +159,11 @@ Play.prototype = {
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         //console.log(this.bitmap)
+<<<<<<< HEAD
         this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
+=======
+        this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
+>>>>>>> pause
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
 
 
@@ -399,6 +433,20 @@ if (light.charge > 0 && (light.active || light.type === 1)){
         //game.debug.body(player);
     }
 };
+
+function pauseState() {
+	game.paused = !game.state.paused;
+	//pauseButton.exists = false;
+	//resumeButton.exists = true;
+}
+
+/*function resumeState() {
+	game.state.resume();
+	resumeButton.exists = false;
+	pauseButton.exists = true;
+		
+}*/
+
 
 getWallIntersection = function (ray, wall_group) {
     var distanceToWall = Number.POSITIVE_INFINITY;
