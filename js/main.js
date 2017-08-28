@@ -1,6 +1,7 @@
 var game;
 
 var player,
+	al,
 	f = 0,
 	innerCircle,
 	outerCircle,
