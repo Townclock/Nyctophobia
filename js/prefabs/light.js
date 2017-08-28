@@ -5,6 +5,10 @@ function Light(game, x, y, key, a, t) {
     this.active = a;
     this.type = t;
     this.fl = 0;
+    this.enableBody = true;
+
+    spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
     switch (this.type){
     	case 0:
     		this.radius = 50;
@@ -27,6 +31,13 @@ Light.prototype = Object.create(Phaser.Sprite.prototype);
 Light.prototype.constructor = Light;
 
 Light.prototype.update = function() {
+    if(spacebar.justPressed()){
+        this.active = false;
+        this.body.velocity.x = 100 + Math.cos(Player.rotation);
+        this.body.velocity.y = 100 + Math.sin(Player.rotation);
+        console.log('spacebar');
+        console.log('velocity = ' + this.body.velocity.x);
+    }
 	if(this.active){
 		/*this.x = player.x;
 		this.y = player.y;
