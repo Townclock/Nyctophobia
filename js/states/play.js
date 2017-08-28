@@ -59,7 +59,7 @@ Play.prototype = {
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        glowstick = new Light(game, player.x, player.y, 'torch', true, 0);
+        glowstick = new Light(game, player.x, player.y, 'torch', true, 1);
         //flashlight = new Light(game, player.x, player.y, 'torch', true, 2);
         //light2 = new Light(game, 500, 400, 'torch', false, 1);
         lights.add(glowstick);

@@ -5,7 +5,7 @@ function Light(game, x, y, key, a, t) {
     this.active = a;
     this.type = t;
     this.fl = 0;
-    game.physics.enable(this);
+    game.physics.arcade.enable(this);
     this.enableBody = true;
 
     spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -44,8 +44,8 @@ Light.prototype.update = function() {
 
         if(spacebar.justPressed() && this.type === 1){
             this.active = false;
-            this.body.velocity.x = 100 + Math.cos(Player.rotation);
-            this.body.velocity.y = 100 + Math.sin(Player.rotation);
+            this.body.velocity.x = 100 * Math.cos(player.rotation - Math.PI / 2 );
+            this.body.velocity.y = 100 * Math.sin(player.rotation - Math.PI / 2 );
             console.log('spacebar');
             console.log('velocity = ' + this.body.velocity.x);
         }
