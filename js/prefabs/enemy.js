@@ -15,27 +15,32 @@ Monster.prototype.constructor = Monster;
 Monster.prototype.update = function() {
 
 
-    if (lights.length >= 0)
+    if (lights.length >= 0 && this.superX === player.superX && this.superY === player.superY)
     {
         var nearestLight = null;
-        var x = 0;
-        while (nearestLight == null && x < lights.children.length){
-            if(lights.children[x].active === true){
-                nearestLight = lights.children[x];
-            }
-            x++;
-        }
-        for(i = 1; i < lights.length; i++){
-            if(lights.children[i].active === true)
-            if (Phaser.Math.distance(lights.getAt(i).x, lights.getAt(i).y, this.x, this.y) < Phaser.Math.distance(nearestLight.x, nearestLight.y, this.x, this.y)){
-                nearestLight = lights.getAt(i);
+        
+        for(i = 0; i < lights.length; i++){
+        	var light = lights.children[i];
+            if((light.active === true || light.type === 1)
+            && light.charge > 0
+            && Phaser.Math.distance(light.x, light.y, this.x, this.y) < light.radius
+            && (light.type < 2
+            || Math.abs(light.rotation + Math.PI / 2 - game.physics.arcade.angleBetween(this, light)) < Math.PI/8
+            || Math.abs(((Math.PI * 2 + light.rotation) % (Math.PI * 2)) + Math.PI / 2 - (Math.PI * 2 + game.physics.arcade.angleBetween(this, light)) % (Math.PI * 2)) < Math.PI/8 ) 
+            &&(nearestLight == null 
+            || Phaser.Math.distance(light.x, light.y, this.x, this.y) < Phaser.Math.distance(nearestLight.x, nearestLight.y, this.x, this.y))){
+            	var line = new Phaser.Line(this.x, this.y, light.x, light.y);
+            	if (!getWallIntersection(line, lwalls)){
+                	nearestLight = light;
+                }
             }
             //console.log('Distance of '+ i + ' is ' + Phaser.Math.distance(lights.getAt(i).x, lights.getAt(i).y, this.x, this.y));
         }
-
-                game.physics.arcade.moveToObject(this, nearestLight, 100);
-                this.rotation = game.physics.arcade.angleBetween(this, lights.getChildAt(0)) + (Math.PI / 2);
-                //console.log('moving to 0') 
+		if(nearestLight != null){
+			game.physics.arcade.moveToObject(this, nearestLight, 100);
+   	     	this.rotation = game.physics.arcade.angleBetween(this, nearestLight) + (Math.PI / 2);
+   	 	    //console.log('moving to 0') 
+   	     }
     }
 
     function destroyPlayer(player, monster) {

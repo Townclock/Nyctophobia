@@ -4,8 +4,8 @@ var Play = function(game) {};
 Play.prototype = {
 
     preload: function() {
-        torchCount = 0;
-        batteryCount = 0;
+        torchCount = 10;
+        batteryCount = 10;
 		
 	},
 
@@ -13,6 +13,7 @@ Play.prototype = {
         k1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
         k2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
         k3 = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+        game.input.mouse.capture = true;
 
         localObjects = game.add.group();
 
@@ -20,13 +21,14 @@ Play.prototype = {
         game.world.setBounds(0, 0, 1440, 1200);
         var bg = game.add.image(0, 0, 'background');
         bg.scale.setTo(3.2);
+        bg.sendToBack();
         
 
         menu = game.add.image(100, 100, 'menu');
         menu.exists = false;
 		pauseButton = game.add.button(650, 25, 'pause', function(){
 	        game.paused = !game.paused;
-            //console.log('paused:' + game.paused);
+            ////console.log('paused:' + game.paused);
             resumeButton.exists = true;
             resumeButton.bringToTop();
             pauseButton.exists = false;
@@ -52,7 +54,7 @@ Play.prototype = {
         walls = game.add.group();
     
         player = new Player(game, 160, 420, 'player', null, walls);
-        monster = new Monster(game, 660, 685, 1, 1, 'monster', null, walls);
+        monster = new Monster(game, 407, 573, 1, 1, 'monster', null, walls);
         torch = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
         battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
 
@@ -60,18 +62,17 @@ Play.prototype = {
         localObjects.add(torch);
         localObjects.add(battery);
         
+        
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        glowstick = new Light(game, player.x, player.y, 'torch', false, 0);
-        flashlight = new Light(game, player.x, player.y, 'torch', true, 2);
+        glowstick = new Light(game, player.x, player.y, 'torch', true, 0);
+        flashlight = new Light(game, player.x, player.y, 'torch', false, 2);
+        al = 0;
         //light2 = new Light(game, 500, 400, 'torch', false, 1);
         lights.add(glowstick);
         lights.add(flashlight);
         
         game.add.existing(player);
-        // lightCircleImage
-        //lightCircle = game.add.image(player.x, player.y, 'circle')
-        //lightCircle.anchor.setTo(0.5, 0.5);
         game.stage.backgroundColor = 0x882110;
 
 
@@ -112,6 +113,14 @@ Play.prototype = {
         //game.world.scale.setTo(.5);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON);
         buildMap('00');
+        
+        game.input.onDown.add(function(){
+        	if(al < 2){
+        		lights.children[al].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
+        		lights.children[al].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
+            	lights.children[al].active = !lights.children[al].active;
+            }
+        }, this);
 
     pauseButton.bringToTop();
 },
@@ -120,17 +129,22 @@ Play.prototype = {
         document.getElementById("torchCount").innerHTML = torchCount;
         document.getElementById("batteryCount").innerHTML = batteryCount;
 
-        if(k1.isDown && !lights.children[0].active){
+        if(k1.justPressed() && !lights.children[0].active){
             for (var x = 0; x < lights.children.length; x++){
                 lights.children[x].active = false;
             }
+            lights.children[0].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
+        	lights.children[0].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
             lights.children[0].active = true;
+            al = 0;
         }
-        else if(k3.isDown && !lights.children[1].active){
+        else if(k3.justPressed() && (!lights.children[1].active || lights.children[1].charge < 1)){
             if (lights.children[1].charge > 0){
                 for (var x = 0; x < lights.children.length; x++){
                     lights.children[x].active = false;
                 }
+                lights.children[1].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
+            	lights.children[1].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
                 lights.children[1].active = true;
             }
             else if (batteryCount > 0){
@@ -141,14 +155,18 @@ Play.prototype = {
                 lights.children[1].active = true;
                 batteryCount --;
             }
+            al = 1;
         }
-        else if(k2.isDown && torchCount > 0){
+        else if(k2.justPressed() && torchCount > 0){
             for (var x = 0; x < lights.children.length; x++){
                 lights.children[x].active = false;
             }
-            torch = new Light(game, 0, 0, 'torch', true, 1);
+            torch = new Light(game, hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x, 
+            						hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y, 
+            						'torch', true, 1);
             lights.add(torch);
             torchCount--;
+            al = 2;
         }
 
         hcircle.x = player.x;
@@ -158,12 +176,8 @@ Play.prototype = {
         bmd.context.fillStyle = 'rgb(00, 00, 00)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
-        //console.log(this.bitmap)
-<<<<<<< HEAD
+        ////console.log(this.bitmap)
         this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
-=======
-        this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
->>>>>>> pause
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
 
 
@@ -312,7 +326,7 @@ if (light.charge > 0 && (light.active || light.type === 1)){
             }
         
         }
-        //console.log(points.length)
+        ////console.log(points.length)
         
         // !!!!! The next 22 lines are copied directly from https://gamemechanicexplorer.com/#raycasting-3 with no modifications except to the light source
         // Now sort the points clockwise around the light
@@ -424,8 +438,6 @@ if (light.charge > 0 && (light.active || light.type === 1)){
         this.bitmap.dirty = true;
         this.rayBitmap.dirty = true;
 
-        //lightCircle.x = player.x;
-        //lightCircle.y = player.y;
     },
 
 
@@ -484,14 +496,14 @@ getWallIntersection = function (ray, wall_group) {
 
 buildMap = function(room) {
     localObjects.forEach(function(object){
-    console.log(object)
+    ////console.log(object)
         if (object.superX == player.superX && object.superY == player.superY){
             object.exists = true;
         }
         else{
             object.exists = false;
         }
-    }, this)
+    }, this);
 
 
 
@@ -516,7 +528,7 @@ buildMap = function(room) {
     makeWall(1, 2, 3, true, 0);
     walls.callAll('destroy');
     while(walls.children.length){
-   walls.forEach(function(wall){
+   		walls.forEach(function(wall){
         wall.destroy();
     }, this);}
     while(lwalls.children.length){
@@ -549,13 +561,13 @@ buildMap = function(room) {
         makeWall(7, 9, 13, true, 3);
         break;
     case '11':
-        makeWall(7, 0, 3, true, 0);
+        makeWall(7, 0, 2, true, 4);
         makeWall(10, 0, 3, true, 0);
-        makeWall(2, 2, 5, false, 2);
+        makeWall(3, 2, 5, false, 1);
         makeWall(11, 2, 5, false, 1);
-        makeWall(2, 3, 10, true, 3);
+        makeWall(2, 2, 10, true, 4);
         makeWall(15, 3, 10, true, 3);
-        makeWall(3, 12, 4, false, 1);
+        makeWall(2, 12, 5, false, 2);
         makeWall(10, 12, 5, false, 2);
         makeWall(7, 12, 3, true, 4);
         makeWall(7, 15, 5, false, 2);
@@ -623,12 +635,12 @@ makeWall = function (x, y, l, v, b) {
 torchAdd = function (player, torch) {
     torch.kill();
     torchCount++;
-    //console.log(torchCount);
+    ////console.log(torchCount);
 }
 
 //pick up battery function
 batteryAdd = function (player, battery) {
     battery.kill();
     batteryCount++;
-    //console.log(batteryCount);
+    ////console.log(batteryCount);
 }

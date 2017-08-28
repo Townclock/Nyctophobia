@@ -90,7 +90,7 @@ Player.prototype.update = function() {
 	}
 
 	//total speed capped at 200
-	vtotal = Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y);
+	var vtotal = Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y);
 	while (vtotal > 200) {
 		if (Math.abs(this.body.velocity.x) > Math.abs(this.body.velocity.y)) {
 			this.body.velocity.x > 0 ? this.body.velocity.x-- : this.body.velocity.x++;
