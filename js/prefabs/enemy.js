@@ -40,13 +40,33 @@ Monster.prototype.update = function() {
 			game.physics.arcade.moveToObject(this, nearestLight, 100);
    	     	this.rotation = game.physics.arcade.angleBetween(this, nearestLight) + (Math.PI / 2);
    	 	    //console.log('moving to 0') 
-   	     }
+            if(temp2 == 1){
+                //monster chase music
+                game.monChase.play('', 0, 0.3, false, true);
+                temp2 = 0;
+                rand = Math.random();
+                if(rand <= 0.33){
+                    game.monGrowl.play('', 0, 0.3, false, true);
+                }
+                else if(rand <= 0.66){
+                    game.monGrowl2.play('', 0, 0.4, false, true);
+                }else{
+                    game.monGrowl3.play('', 0, 0.4, false, true);
+                }
+            }
+   	    }else{
+            game.monChase.stop();
+            temp2 = 1;
+        }
     }
 
     function destroyPlayer(player, monster) {
 
         //switch to GameOver state if the player collides with an enemy
         player.kill();
+        game.bg.stop();
+        game.walk.stop();
+        game.monChase.stop();
         game.state.start('GameOver');
     }
     

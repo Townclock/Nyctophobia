@@ -29,8 +29,6 @@ Player.prototype.update = function() {
 	game.physics.arcade.collide(this, walls);
 
 	//collision with torch and battery
-
-    
     game.physics.arcade.overlap(this, torch, torchAdd, null, this);
 	game.physics.arcade.overlap(this, battery, batteryAdd, null, this);
 
@@ -83,10 +81,16 @@ Player.prototype.update = function() {
 	}
 
 	if (this.body.velocity.x != 0 || this.body.velocity.y != 0) {
-		this.animations.play('walk', 10, true);
+		this.animations.play('walk', 4, true);
+		if (temp == 1) {
+			game.walk.play('', 0, 0.5, true, true);
+			temp = 0;
+		}
 	} else {
 		this.animations.stop();
 		this.frame = 0;
+		game.walk.stop();
+		temp = 1;
 	}
 
 	//total speed capped at 200

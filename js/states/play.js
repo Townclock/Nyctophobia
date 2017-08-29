@@ -116,6 +116,24 @@ Play.prototype = {
         
         game.input.onDown.add(function(){
         	if(al < 2){
+                    if(al == 1){
+                        if(lights.children[1].active){
+                            //flashlight off sound
+                            game.flashOff.play('', 0, 0.35, false, true);
+                        }else{
+                            //flashlight on sound
+                            game.flashOn.play('', 0, 0.35, false, true);
+                        }
+                    }
+                    if(al == 0){
+                        if(lights.children[0].active){
+                            //glowstick off sound
+                            game.glowOff.play('', 0, 0.75, false, true);
+                        }else{
+                            //glowstick on sound
+                            game.glowOn.play('', 0, 0.75, false, true);
+                        }
+                    }
         		lights.children[al].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
         		lights.children[al].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
             	lights.children[al].active = !lights.children[al].active;
@@ -123,6 +141,8 @@ Play.prototype = {
         }, this);
 
     pauseButton.bringToTop();
+
+    game.time.events.add(Phaser.Timer.SECOND * 15, ambient1, this);
 },
 
     update: function() {
@@ -137,6 +157,8 @@ Play.prototype = {
         	lights.children[0].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
             lights.children[0].active = true;
             al = 0;
+            //glowstick on sound
+            game.glowOn.play('', 0, 0.75, false, true);
         }
         else if(k3.justPressed() && (!lights.children[1].active || lights.children[1].charge < 1)){
             if (lights.children[1].charge > 0){
@@ -156,17 +178,26 @@ Play.prototype = {
                 batteryCount --;
             }
             al = 1;
+            //flashlight on sound
+            game.flashOn.play('', 0, 0.35, false, true);
         }
-        else if(k2.justPressed() && torchCount > 0){
-            for (var x = 0; x < lights.children.length; x++){
-                lights.children[x].active = false;
+        else if(k2.justPressed()){
+            if(torchCount > 0){
+                for (var x = 0; x < lights.children.length; x++){
+                    lights.children[x].active = false;
+                }
+                torch = new Light(game, hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x, 
+            						  hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y, 
+            						  'torch', true, 1);
+                lights.add(torch);
+                torchCount--;
+                al = 2;
+                //torch light sound
+                game.torchLight.play('', 0, 0.35, false, true);
+            }else{
+                //torch error sound
+                game.torchError.play('', 0, 0.75, false, true);
             }
-            torch = new Light(game, hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x, 
-            						hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y, 
-            						'torch', true, 1);
-            lights.add(torch);
-            torchCount--;
-            al = 2;
         }
 
         hcircle.x = player.x;
@@ -635,6 +666,7 @@ makeWall = function (x, y, l, v, b) {
 torchAdd = function (player, torch) {
     torch.kill();
     torchCount++;
+    game.itemCollect.play('', 0, 0.5, false, true);
     ////console.log(torchCount);
 }
 
@@ -642,5 +674,16 @@ torchAdd = function (player, torch) {
 batteryAdd = function (player, battery) {
     battery.kill();
     batteryCount++;
+    game.itemCollect.play('', 0, 0.5, false, true);
     ////console.log(batteryCount);
+}
+
+ambient1 = function() {
+    game.ambient.play('', 0, 0.4, false, true);
+    this.time.events.add(Phaser.Timer.SECOND * 20, ambient2, this);
+}
+
+ambient2 = function() {
+    game.ambient2.play('', 0, 0.4, false, true);
+    this.time.events.add(Phaser.Timer.SECOND * 20, ambient1, this);
 }
