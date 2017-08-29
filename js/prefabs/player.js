@@ -15,9 +15,9 @@ function Player(game, x, y, key, frame, walls) {
 	a = game.input.keyboard.addKey(Phaser.Keyboard.A);
 	s = game.input.keyboard.addKey(Phaser.Keyboard.S);
 	d = game.input.keyboard.addKey(Phaser.Keyboard.D);
-	k1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-	k2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
-	k3 = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+	k1 = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+	k2 = game.input.keyboard.addKey(Phaser.Keyboard.Q);
+	k3 = game.input.keyboard.addKey(Phaser.Keyboard.E);
 }
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);  
