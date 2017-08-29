@@ -26,7 +26,7 @@ Play.prototype = {
 
         menu = game.add.image(100, 100, 'menu');
         menu.exists = false;
-		pauseButton = game.add.button(650, 25, 'pause', function(){
+		pauseButton = game.add.button(550, 25, 'pause', function(){
 	        game.paused = !game.paused;
             ////console.log('paused:' + game.paused);
             resumeButton.exists = true;
@@ -35,7 +35,7 @@ Play.prototype = {
             menu.bringToTop();
             menu.exists = true;
             },this);
-		resumeButton = game.add.button(650, 25, 'resume', function(){
+		resumeButton = game.add.button(550, 25, 'resume', function(){
             game.paused = !game.paused;
             resumeButton.exists = false;
             pauseButton.exists = true;
