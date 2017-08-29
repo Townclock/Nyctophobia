@@ -63,9 +63,15 @@ Player.prototype.update = function() {
 	} else if (s.isDown && this.body.velocity.y < 200) {
 		this.body.velocity.y += 20;
 	} else if (this.body.velocity.y < 0) {
-		this.body.velocity.y += 10;
+		this.body.velocity.y += 70;
+        if (this.body.velocity.y > 0){
+            this.body.velocity.y = 0;
+        }
 	} else if (this.body.velocity.y > 0) {
-		this.body.velocity.y -= 10;
+		this.body.velocity.y -= 70;
+        if (this.body.velocity.y < 0){
+            this.body.velocity.y = 0;
+        }
 	}
 
 	//left/right movement
@@ -74,12 +80,18 @@ Player.prototype.update = function() {
 	} else if (d.isDown && this.body.velocity.x < 200) {
 		this.body.velocity.x += 20;
 	} else if (this.body.velocity.x < 0) {
-		this.body.velocity.x += 10;
+		this.body.velocity.x += 70;
+        if (this.body.velocity.x > 0){
+            this.body.velocity.x = 0;
+        }
 	} else if (this.body.velocity.x > 0) {
-		this.body.velocity.x -= 10;
+		this.body.velocity.x -= 70;
+        if (this.body.velocity.x < 0){
+            this.body.velocity.x = 0;
+        }
 	}
 
-	if (this.body.velocity.x != 0 || this.body.velocity.y != 0) {
+	if (a.isDown || w.isDown || s.isDown || d.isDown) {
 		this.animations.play('walk', 4, true);
 		if (temp == 1) {
 			game.walk.play('', 0, 0.5, true, true);

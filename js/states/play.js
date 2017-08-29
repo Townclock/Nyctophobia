@@ -68,8 +68,8 @@ Play.prototype = {
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        glowstick = new Light(game, player.x, player.y, 'torch', true, 0);
-        flashlight = new Light(game, player.x, player.y, 'torch', false, 2);
+        glowstick = new Light(game, player.x, player.y, player.superX, player.superY, 'torch', true, 0);
+        flashlight = new Light(game, player.x, player.y, player.superX, player.superY, 'torch', false, 2);
         al = 0;
         //light2 = new Light(game, 500, 400, 'torch', false, 1);
         lights.add(glowstick);
@@ -191,7 +191,7 @@ Play.prototype = {
                 }
                 torch = new Light(game, hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x, 
             						  hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y, 
-            						  'torch', true, 1);
+							  player.superX, player.superY, 'torch', true, 1);
                 lights.add(torch);
                 torchCount--;
                 al = 2;
@@ -218,7 +218,7 @@ Play.prototype = {
         
       
 lights.forEach(function(light){
-if (light.charge > 0 && (light.active || light.type === 1)){
+if (light.exists && light.charge > 0 && (light.active || light.type === 1)){
         var stageCorners = [];
         ncircle = new Phaser.Circle(light.x, light.y, light.radius * 2);
 		
@@ -529,8 +529,26 @@ getWallIntersection = function (ray, wall_group) {
 }
 
 buildMap = function(room) {
+    glowstick.superX = player.superX;
+    glowstick.superY = player.superY;
+    flashlight.superX = player.superX;
+    flashlight.superY = player.superY;
+
+    lights.forEach(function(object){
+        if (object.active == true){
+            object.superX = player.superX;
+            object.superY = player.superY;
+        }
+
+        if (object.superX == player.superX && object.superY == player.superY){
+            object.exists = true;
+        }
+        else{
+            object.exists = false;
+        }
+    }, this);
+
     localObjects.forEach(function(object){
-    ////console.log(object)
         if (object.superX == player.superX && object.superY == player.superY){
             object.exists = true;
         }
