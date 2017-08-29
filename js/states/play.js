@@ -57,10 +57,14 @@ Play.prototype = {
         monster = new Monster(game, 407, 573, 1, 1, 'monster', null, walls);
         torch = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
         battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
+        stair1 = new Staircase(game, 107, 400, '', null, 0, 0);
+        stair2 = new Staircase(game, 429, 793, '', stair1, 1, 1);
 
         localObjects.add(monster);
         localObjects.add(torch);
         localObjects.add(battery);
+        localObjects.add(stair1);
+        localObjects.add(stair2);
         
         
         lights = game.add.group();

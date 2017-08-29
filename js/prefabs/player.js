@@ -4,7 +4,7 @@ function Player(game, x, y, key, frame, walls) {
 	this.animations.add('walk');
 	game.physics.enable(this);
 	this.enableBody = true;
-	this.body.setSize(40, 40, 20, 35);
+	this.body.setSize(70, 70, 5, 20);
 	this.anchor.set(.5);
 
     this.superX = 0;
@@ -24,6 +24,7 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
+	game.debug.body(this);
 
 	//collision with walls
 	game.physics.arcade.collide(this, walls);
