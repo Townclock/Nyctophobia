@@ -24,8 +24,6 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
-	game.debug.body(this);
-
 	//collision with walls
 	game.physics.arcade.collide(this, walls);
 

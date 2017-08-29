@@ -10,9 +10,6 @@ Play.prototype = {
 	},
 
     create: function() {
-        k1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-        k2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
-        k3 = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
         game.input.mouse.capture = true;
 
         localObjects = game.add.group();
@@ -53,12 +50,14 @@ Play.prototype = {
         lwalls = game.add.group();
         walls = game.add.group();
     
-        player = new Player(game, 160, 420, 'player', null, walls);
+        player = new Player(game, 200, 420, 'player', null, walls);
         monster = new Monster(game, 407, 573, 1, 1, 'monster', null, walls);
         torch = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
         battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
-        stair1 = new Staircase(game, 107, 400, '', null, 0, 0);
-        stair2 = new Staircase(game, 429, 793, '', stair1, 1, 1);
+
+        //game, x, y, key, destination, superX, superY, direction (1 left, 2 right, 3 up, 4 down)
+        stair1 = new Staircase(game, 37, 400, 'stairs', null, 0, 0, 1);
+        stair2 = new Staircase(game, 429, 793, 'stairs', stair1, 1, 1, 2);
 
         localObjects.add(monster);
         localObjects.add(torch);
@@ -208,16 +207,16 @@ Play.prototype = {
         hcircle.y = player.y;
         
         bmd.cls();
-        bmd.context.fillStyle = 'rgb(00, 00, 00)';
+        bmd.context.fillStyle = 'rgb(100, 100, 100)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         ////console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
+        this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
 
 
         
-        
+      
 lights.forEach(function(light){
 if (light.charge > 0 && (light.active || light.type === 1)){
         var stageCorners = [];

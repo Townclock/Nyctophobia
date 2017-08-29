@@ -1,6 +1,7 @@
 
-function Staircase(game, x, y, key, dest, sX, sY) {
+function Staircase(game, x, y, key, dest, sX, sY, dir) {
     Phaser.Sprite.call(this, game, x, y, key);
+    this.anchor.set(.5);
     this.superX = sX;
     this.superY = sY;
     this.destination = dest;
@@ -9,27 +10,32 @@ function Staircase(game, x, y, key, dest, sX, sY) {
     }
     game.physics.enable(this);
     this.enableBody = true;
-    this.overlapping = false;
+    this.direction = dir;
+    this.rotation = this.direction > 2 ? 0 : Math.PI / 2;
 }
 
 Staircase.prototype = Object.create(Phaser.Sprite.prototype);  
 Staircase.prototype.constructor = Staircase;
 
 Staircase.prototype.update = function() {
-    if (!this.overlapping){
-        game.physics.arcade.overlap(player, this, function(p, d){
-            p.superX = d.superX;
-            p.superY = d.superY;
-            p.x = d.x;
-            p.y = d.y;
-            d.overlapping = true;
-            buildMap(d.superX + '' + d.superY);
+
+    game.physics.arcade.overlap(player, this, null, 
+        function(p, d){
+            p.superX = d.destination.superX;
+            p.superY = d.destination.superY;
+            p.x = d.destination.x;
+            p.y = d.destination.y;
+            switch(d.direction){
+                case 1 : p.x -= 100;
+                break;
+                case 2 : p.x += 100;
+                break;
+                case 3 : p.y -= 100;
+                break;
+                case 4 : p.y += 100;
+                break;
+            }
+            buildMap(d.destination.superX + '' + d.destination.superY);
         }, player, this.destination);
-    }
-    else{
-        this.overlapping = false;
-        game.physics.arcade.overlap(player, this, function(stair){
-            this.overlapping = true;
-        }, this);
-    }
+
 };

@@ -5,7 +5,7 @@ Load.prototype = {
     preload: function() {
         game.load.path = 'assets/img/';
         game.load.image('title', 'Title.png');
-        game.load.spritesheet('player', 'character.png', 80, 115, 6);
+        game.load.spritesheet('player', 'character.png', 91, 128, 5);
         game.load.image('wall', 'purplebrick.png');
         game.load.image('monster', 'monster.png');
         game.load.image('torch', 'torch.png');
@@ -14,8 +14,9 @@ Load.prototype = {
 		game.load.image('pause', 'pause.png');
 		game.load.image('resume', 'resume.png');
 		game.load.image('menu', 'menu.png');
-		
-        game.load.path = 'assets/audio/';
+		game.load.image('stairs', 'stair.png');
+
+        game.load.path = 'assets/audio/Up-to-Date Audio/';
         game.load.audio('ambient', 'ambient.mp3');
         game.load.audio('ambient2', 'ambient2.mp3');
         game.load.audio('bg', 'background.mp3');
