@@ -7,7 +7,7 @@ Load.prototype = {
         game.load.image('title', 'Title.png');
         game.load.spritesheet('player', 'character.png', 91, 128, 5);
         game.load.image('wall', 'purplebrick.png');
-        game.load.image('monster', 'monster.png');
+        game.load.spritesheet('monster', 'monster.png', 128, 109, 3);
         game.load.image('torch', 'torch.png');
         game.load.image('light', 'light.png');
         game.load.image('battery', 'battery.png');
