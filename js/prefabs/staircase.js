@@ -21,7 +21,7 @@ Staircase.prototype.update = function() {
 
     game.physics.arcade.overlap(player, this, null, 
         function(p, d){
-        	p.superX = -1;
+        	p.superX = -1;console.log(p.x, p.y, monster.x, monster.y); 
         	p.x = d.destination.x;
             p.y = d.destination.y;
             p.superX = d.destination.superX;
