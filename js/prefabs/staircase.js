@@ -26,13 +26,13 @@ Staircase.prototype.update = function() {
             p.x = d.destination.x;
             p.y = d.destination.y;
             switch(d.direction){
-                case 1 : p.x -= 100;
+                case 1 : p.x -= 105;
                 break;
-                case 2 : p.x += 100;
+                case 2 : p.x += 105;
                 break;
-                case 3 : p.y -= 100;
+                case 3 : p.y -= 105;
                 break;
-                case 4 : p.y += 100;
+                case 4 : p.y += 105;
                 break;
             }
             buildMap(d.destination.superX + '' + d.destination.superY);

@@ -9,6 +9,7 @@ Load.prototype = {
         game.load.image('wall', 'purplebrick.png');
         game.load.image('monster', 'monster.png');
         game.load.image('torch', 'torch.png');
+        game.load.image('light', 'light.png');
         game.load.image('battery', 'battery.png');
         game.load.image('background', 'background.png');
 		game.load.image('pause', 'pause.png');

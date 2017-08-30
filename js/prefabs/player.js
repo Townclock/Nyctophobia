@@ -4,7 +4,7 @@ function Player(game, x, y, key, frame, walls) {
 	this.animations.add('walk');
 	game.physics.enable(this);
 	this.enableBody = true;
-	this.body.setSize(70, 70, 5, 20);
+	this.body.setSize(70, 70, 10, 30);
 	this.anchor.set(.5);
 
     this.superX = 0;
@@ -24,11 +24,12 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.update = function() {
+
 	//collision with walls
 	game.physics.arcade.collide(this, walls);
 
 	//collision with torch and battery
-    game.physics.arcade.overlap(this, torch, torchAdd, null, this);
+    game.physics.arcade.overlap(this, torch1, torchAdd, null, this);
 	game.physics.arcade.overlap(this, battery, batteryAdd, null, this);
 
 	//enable player rotation
@@ -63,15 +64,9 @@ Player.prototype.update = function() {
 	} else if (s.isDown && this.body.velocity.y < 200) {
 		this.body.velocity.y += 20;
 	} else if (this.body.velocity.y < 0) {
-		this.body.velocity.y += 70;
-        if (this.body.velocity.y > 0){
-            this.body.velocity.y = 0;
-        }
+		this.body.velocity.y += 10;
 	} else if (this.body.velocity.y > 0) {
-		this.body.velocity.y -= 70;
-        if (this.body.velocity.y < 0){
-            this.body.velocity.y = 0;
-        }
+		this.body.velocity.y -= 10;
 	}
 
 	//left/right movement
@@ -80,18 +75,12 @@ Player.prototype.update = function() {
 	} else if (d.isDown && this.body.velocity.x < 200) {
 		this.body.velocity.x += 20;
 	} else if (this.body.velocity.x < 0) {
-		this.body.velocity.x += 70;
-        if (this.body.velocity.x > 0){
-            this.body.velocity.x = 0;
-        }
+		this.body.velocity.x += 10;
 	} else if (this.body.velocity.x > 0) {
-		this.body.velocity.x -= 70;
-        if (this.body.velocity.x < 0){
-            this.body.velocity.x = 0;
-        }
+		this.body.velocity.x -= 10;
 	}
 
-	if (a.isDown || w.isDown || s.isDown || d.isDown) {
+	if (this.body.velocity.x != 0 || this.body.velocity.y != 0) {
 		this.animations.play('walk', 4, true);
 		if (temp == 1) {
 			game.walk.play('', 0, 0.5, true, true);

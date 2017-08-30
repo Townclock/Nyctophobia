@@ -5,6 +5,8 @@ function Light(game, x, y, superX, superY, key, a, t) {
     this.active = a;
     this.type = t;
     this.fl = 0;
+    game.physics.arcade.enable(this);
+    this.enableBody = false;
     this.superX = superX;
     this.superY = superY;
     switch (this.type){
@@ -19,16 +21,20 @@ function Light(game, x, y, superX, superY, key, a, t) {
     	case 2:
     		this.radius = 1000;
     		this.lalpha = .5
-    		this.charge = 100;
+    		this.charge = 30;
     		break;
     	default:
     }
+    spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
 }
 
 Light.prototype = Object.create(Phaser.Sprite.prototype);  
 Light.prototype.constructor = Light;
 
 Light.prototype.update = function() {
+    game.physics.arcade.collide(this, walls);
+    
 	if(this.active){
 		/*this.x = player.x;
 		this.y = player.y;
@@ -38,6 +44,15 @@ Light.prototype.update = function() {
 		this.y = point.y;
 		this.rotation = game.physics.arcade.angleToPointer(player) + (Math.PI / 2);
 		this.visible = true;
+
+        if(spacebar.justPressed() && this.type === 1){
+            this.active = false;
+            this.enableBody = true;
+            this.body.velocity.x = 100 * Math.cos(player.rotation - Math.PI / 2 );
+            this.body.velocity.y = 100 * Math.sin(player.rotation - Math.PI / 2 );
+            //console.log('spacebar');
+            //console.log('velocity = ' + this.body.velocity.x);
+        }
 	}
 	else{
 		if(this.type != 1){

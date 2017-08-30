@@ -52,15 +52,17 @@ Play.prototype = {
     
         player = new Player(game, 200, 420, 'player', null, walls);
         monster = new Monster(game, 407, 573, 1, 1, 'monster', null, walls);
-        torch = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
+        torch1 = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
         battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
 
         //game, x, y, key, destination, superX, superY, direction (1 left, 2 right, 3 up, 4 down)
-        stair1 = new Staircase(game, 37, 400, 'stairs', null, 0, 0, 1);
-        stair2 = new Staircase(game, 429, 793, 'stairs', stair1, 1, 1, 2);
+        stair1 = new Staircase(game, 647, 1058, 'stairs', null, 1, 0, 4);
+        stair2 = new Staircase(game, 100, 100, 'stairs', stair1, 10, 10, 3);
+        stair3 = new Staircase(game, 432, 672, 'stairs', null, 11, 9, 4);
+        stair4 = new Staircase(game, 648, 56, 'stairs', stair3, 1, 1, 3);
 
         localObjects.add(monster);
-        localObjects.add(torch);
+        localObjects.add(torch1);
         localObjects.add(battery);
         localObjects.add(stair1);
         localObjects.add(stair2);
@@ -68,8 +70,8 @@ Play.prototype = {
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        glowstick = new Light(game, player.x, player.y, player.superX, player.superY, 'torch', true, 0);
-        flashlight = new Light(game, player.x, player.y, player.superX, player.superY, 'torch', false, 2);
+        glowstick = new Light(game, player.x, player.y, player.superX, player.superY, '', true, 0);
+        flashlight = new Light(game, player.x, player.y, player.superX, player.superY, 'light', false, 2);
         al = 0;
         //light2 = new Light(game, 500, 400, 'torch', false, 1);
         lights.add(glowstick);
@@ -190,7 +192,7 @@ Play.prototype = {
                     lights.children[x].active = false;
                 }
                 torch = new Light(game, hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x, 
-            						  hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y, 
+            						    hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y, 
 							  player.superX, player.superY, 'torch', true, 1);
                 lights.add(torch);
                 torchCount--;
@@ -609,7 +611,8 @@ buildMap = function(room) {
         makeWall(3, 3, 4, false, 2);
         makeWall(0, 0, 6, true, 4);
         makeWall(1, 0, 10, false, 1);
-        makeWall(10, 1, 21, true, 3);
+        makeWall(10, 1, 20, true, 3);
+        makeWall(8, 20, 3, false, 1);
         makeWall(7, 9, 13, true, 3);
         break;
     case '11':
