@@ -15,9 +15,12 @@ function Player(game, x, y, key, frame, walls) {
 	a = game.input.keyboard.addKey(Phaser.Keyboard.A);
 	s = game.input.keyboard.addKey(Phaser.Keyboard.S);
 	d = game.input.keyboard.addKey(Phaser.Keyboard.D);
-	k1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-	k2 = game.input.keyboard.addKey(Phaser.Keyboard.TWO);
-	k3 = game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+	k1 = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+	k2 = game.input.keyboard.addKey(Phaser.Keyboard.Q);
+	k3 = game.input.keyboard.addKey(Phaser.Keyboard.E);
+    spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+    pause = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 }
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);  
@@ -103,4 +106,75 @@ Player.prototype.update = function() {
 		}
 		vtotal--;
 	}
+
+
+// manages the light controls
+
+
+
+if(k1.justPressed() && !lights.children[0].active){
+            for (var x = 0; x < lights.children.length; x++){
+                lights.children[x].active = false;
+            }
+            lights.children[0].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
+            lights.children[0].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
+            lights.children[0].active = true;
+            al = 0;
+            //glowstick on sound
+            game.glowOn.play('', 0, 0.75, false, true);
+        }
+        else if(k3.justPressed() && (!lights.children[1].active || lights.children[1].charge < 1)){
+            if (lights.children[1].charge > 0){
+                for (var x = 0; x < lights.children.length; x++){
+                    lights.children[x].active = false;
+                }
+                lights.children[1].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
+                lights.children[1].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
+                lights.children[1].active = true;
+            }
+            else if (batteryCount > 0){
+                for (var x = 0; x < lights.children.length; x++){
+                    lights.children[x].active = false;
+                }
+                lights.children[1].charge = 100;
+                lights.children[1].active = true;
+                batteryCount --;
+            }
+            al = 1;
+            //flashlight on sound
+            game.flashOn.play('', 0, 0.35, false, true);
+        }
+        else if(k2.justPressed()){
+            if(torchCount > 0){
+                for (var x = 0; x < lights.children.length; x++){
+                    lights.children[x].active = false;
+                }
+                torch = new Light(game, hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x,
+                                      hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y,
+                              player.superX, player.superY, 'torch', true, 1);
+                lights.add(torch);
+                torchCount--;
+                al = 2;
+                //torch light sound
+                game.torchLight.play('', 0, 0.35, false, true);
+            }else{
+                //torch error sound
+                game.torchError.play('', 0, 0.75, false, true);
+            }
+        }
+
+    if (pause.justPressed()){
+        if (!game.paused){
+            game.paused = true;
+            resumeButton.exists = true;
+            resumeButton.bringToTop();
+            pauseButton.exists = false;
+            menu.bringToTop();
+            menu.exists = true;
+
+        }
+
+
+    }
+
 }

@@ -10,6 +10,9 @@ Play.prototype = {
 	},
 
     create: function() {
+
+     game.physics.arcade.enable(this);
+     
         game.input.mouse.capture = true;
 
         localObjects = game.add.group();
@@ -49,6 +52,8 @@ Play.prototype = {
 
         lwalls = game.add.group();
         walls = game.add.group();
+
+
     
         player = new Player(game, 200, 420, 'player', null, walls);
         monster = new Monster(game, 407, 573, 1, 1, 'monster', null, walls);
@@ -72,6 +77,7 @@ Play.prototype = {
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
         glowstick = new Light(game, player.x, player.y, player.superX, player.superY, '', true, 0);
         flashlight = new Light(game, player.x, player.y, player.superX, player.superY, 'light', false, 2);
+
         al = 0;
         //light2 = new Light(game, 500, 400, 'torch', false, 1);
         lights.add(glowstick);
@@ -153,57 +159,6 @@ Play.prototype = {
     update: function() {
         document.getElementById("torchCount").innerHTML = torchCount;
         document.getElementById("batteryCount").innerHTML = batteryCount;
-
-        if(k1.justPressed() && !lights.children[0].active){
-            for (var x = 0; x < lights.children.length; x++){
-                lights.children[x].active = false;
-            }
-            lights.children[0].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
-        	lights.children[0].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
-            lights.children[0].active = true;
-            al = 0;
-            //glowstick on sound
-            game.glowOn.play('', 0, 0.75, false, true);
-        }
-        else if(k3.justPressed() && (!lights.children[1].active || lights.children[1].charge < 1)){
-            if (lights.children[1].charge > 0){
-                for (var x = 0; x < lights.children.length; x++){
-                    lights.children[x].active = false;
-                }
-                lights.children[1].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
-            	lights.children[1].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
-                lights.children[1].active = true;
-            }
-            else if (batteryCount > 0){
-                for (var x = 0; x < lights.children.length; x++){
-                    lights.children[x].active = false;
-                }
-                lights.children[1].charge = 100;
-                lights.children[1].active = true;
-                batteryCount --;
-            }
-            al = 1;
-            //flashlight on sound
-            game.flashOn.play('', 0, 0.35, false, true);
-        }
-        else if(k2.justPressed()){
-            if(torchCount > 0){
-                for (var x = 0; x < lights.children.length; x++){
-                    lights.children[x].active = false;
-                }
-                torch = new Light(game, hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x, 
-            						    hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y, 
-							  player.superX, player.superY, 'torch', true, 1);
-                lights.add(torch);
-                torchCount--;
-                al = 2;
-                //torch light sound
-                game.torchLight.play('', 0, 0.35, false, true);
-            }else{
-                //torch error sound
-                game.torchError.play('', 0, 0.75, false, true);
-            }
-        }
 
         hcircle.x = player.x;
         hcircle.y = player.y;
@@ -612,12 +567,13 @@ buildMap = function(room) {
         makeWall(0, 0, 6, true, 4);
         makeWall(1, 0, 10, false, 1);
         makeWall(10, 1, 20, true, 3);
-        makeWall(8, 20, 3, false, 1);
         makeWall(7, 9, 13, true, 3);
+        makeWall(8, 20, 3, false, 1);
         break;
     case '11':
+        makeWall(8, 0, 3, false, 1);
         makeWall(7, 0, 2, true, 4);
-        makeWall(10, 0, 3, true, 0);
+        makeWall(10, 1, 2, true, 3);
         makeWall(3, 2, 5, false, 1);
         makeWall(11, 2, 5, false, 1);
         makeWall(2, 2, 10, true, 4);

@@ -9,6 +9,7 @@ function Light(game, x, y, superX, superY, key, a, t) {
     this.enableBody = false;
     this.superX = superX;
     this.superY = superY;
+    
     switch (this.type){
     	case 0:
     		this.radius = 75;
@@ -25,8 +26,6 @@ function Light(game, x, y, superX, superY, key, a, t) {
     		break;
     	default:
     }
-    spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
 }
 
 Light.prototype = Object.create(Phaser.Sprite.prototype);  
