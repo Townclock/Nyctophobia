@@ -55,8 +55,17 @@ Light.prototype.update = function() {
 	}
 	else{
 		if(this.type != 1){
-			this.visible = false;
-		}
+            if(al === 1 && this.type === 2){
+                this.visible = true;
+                var point = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3);
+                this.x = point.x;
+                this.y = point.y;
+                this.rotation = game.physics.arcade.angleToPointer(player) + (Math.PI / 2);
+            }
+            else{
+			    this.visible = false;
+		    }
+        }
 		else{
 			this.anchor.x = .5;
 			this.anchor.y = .2;
