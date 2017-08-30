@@ -559,12 +559,14 @@ buildMap = function(room) {
         makeWall(3, 3, 4, false, 2);
         makeWall(0, 0, 6, true, 4);
         makeWall(1, 0, 10, false, 1);
-        makeWall(10, 1, 21, true, 3);
+        makeWall(10, 1, 20, true, 3);
         makeWall(7, 9, 13, true, 3);
+        makeWall(8, 20, 3, false, 1 );
         break;
     case '11':
+        makeWall(8, 0, 3, false, 1);
         makeWall(7, 0, 2, true, 4);
-        makeWall(10, 0, 3, true, 0);
+        makeWall(10, 1, 2, true, 3);
         makeWall(3, 2, 5, false, 1);
         makeWall(11, 2, 5, false, 1);
         makeWall(2, 2, 10, true, 4);
