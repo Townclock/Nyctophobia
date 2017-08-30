@@ -6,6 +6,8 @@ function Light(game, x, y, superX, superY, key, a, t) {
     this.type = t;
     this.fl = 0;
     game.physics.arcade.enable(this);
+    this.body.setSize(20, 20, 25, 10);
+    this.body.bounce.set(.2);
     this.enableBody = false;
     this.superX = superX;
     this.superY = superY;
@@ -33,11 +35,8 @@ Light.prototype.constructor = Light;
 
 Light.prototype.update = function() {
     game.physics.arcade.collide(this, walls);
-    
+
 	if(this.active){
-		/*this.x = player.x;
-		this.y = player.y;
-		this.anchor.setTo(-.5, .7);*/
 		var point = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3);
 		this.x = point.x;
 		this.y = point.y;
@@ -47,10 +46,9 @@ Light.prototype.update = function() {
         if(spacebar.justPressed() && this.type === 1){
             this.active = false;
             this.enableBody = true;
-            this.body.velocity.x = 100 * Math.cos(player.rotation - Math.PI / 2 );
-            this.body.velocity.y = 100 * Math.sin(player.rotation - Math.PI / 2 );
-            //console.log('spacebar');
-            //console.log('velocity = ' + this.body.velocity.x);
+            this.body.velocity.x = 800 * Math.cos(player.rotation - Math.PI / 2 );
+            this.body.velocity.y = 800 * Math.sin(player.rotation - Math.PI / 2 );
+            this.body.angularVelocity = -800;
         }
 	}
 	else{
@@ -69,6 +67,18 @@ Light.prototype.update = function() {
 		else{
 			this.anchor.x = .5;
 			this.anchor.y = .2;
+			if(this.enableBody){
+				if(Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y) > 10){
+					this.body.velocity.x *= .99;
+					this.body.velocity.y *= .99;
+					this.body.angularVelocity *= .97;
+				}
+				else{
+					this.body.velocity.x = this.body.velocity.y = 0;
+					this.body.angularVelocity = 0;
+					this.enableBody = false;
+				}
+			}
 		}
 	}
 	if(this.type === 1){

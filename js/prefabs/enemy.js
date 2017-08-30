@@ -1,5 +1,5 @@
 //create enemy object
-function Monster(game, x, y, superX, superY, key, frame, walls) {
+function Monster(game, x, y, superX, superY, key, frame) {
     Phaser.Sprite.call(this, game, x, y, key, frame);
     game.physics.enable(this);
     this.enableBody = true;
@@ -38,7 +38,7 @@ Monster.prototype.update = function() {
         }
 		if(nearestLight != null){
 			game.physics.arcade.moveToObject(this, nearestLight, 100);
-   	     	this.rotation = game.physics.arcade.angleBetween(this, nearestLight) + (Math.PI / 2);
+   	     	this.rotation = game.physics.arcade.angleBetween(this, nearestLight) + Math.PI;
    	 	    //console.log('moving to 0') 
             if(temp2 == 1){
                 //monster chase music

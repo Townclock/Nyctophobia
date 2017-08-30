@@ -17,7 +17,7 @@ Load.prototype = {
 		game.load.image('menu', 'menu.png');
 		game.load.image('stairs', 'stair.png');
 
-        game.load.path = 'assets/audio/Up-to-Date Audio/';
+        game.load.path = 'assets/audio/';
         game.load.audio('ambient', 'ambient.mp3');
         game.load.audio('ambient2', 'ambient2.mp3');
         game.load.audio('bg', 'background.mp3');

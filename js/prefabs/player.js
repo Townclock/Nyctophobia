@@ -1,5 +1,5 @@
 //create player object
-function Player(game, x, y, key, frame, walls) {
+function Player(game, x, y, key, frame) {
 	Phaser.Sprite.call(this, game, x, y, key, frame);
 	this.animations.add('walk');
 	game.physics.enable(this);
