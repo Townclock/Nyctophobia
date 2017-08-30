@@ -584,6 +584,39 @@ buildMap = function(room) {
         makeWall(7, 15, 5, false, 2);
         makeWall(12, 13, 3, true, 3);
         break;
+    case '1010':
+        makeWall(0, 0, 10, true, 0);
+        makeWall(1, 0, 8, false, 1);
+        makeWall(1, 9, 3, false, 1);
+        makeWall(4, 10, 13, false, 1);
+        makeWall(3, 10, 1, false, 3);
+        makeWall(8, 1, 1, false, 3);
+        makeWall(9, 1, 5, false, 1);
+        makeWall(13, 2, 2, true, 3);
+        makeWall(14, 3, 2, false, 1);
+        makeWall(15, 4, 4, true, 3);
+        makeWall(3, 3, 2, false, 0);
+        makeWall(3, 5, 2, true, 0);
+        makeWall(4, 6, 1, false, 1);
+        makeWall(6, 3, 5, true, 0);
+        makeWall(7, 4, 1, false, 1);
+        makeWall(7, 7, 1, false, 1);
+        makeWall(9, 4, 4, true, 0);
+        makeWall(10, 4, 1, false, 1);
+        makeWall(12, 6, 2, true, 0);
+        break;
+    case '1110':
+        makeWall(0, 0, 8, true, 0);
+        makeWall(1, 0, 9, false, 1);
+        makeWall(0, 10, 10, false, 0);
+        makeWall(9, 3, 6, true, 4);
+        makeWall(10, 3, 3, false, 1);
+        makeWall(12, 0, 3, true, 4);
+        makeWall(3, 3, 1, false, 2);
+        makeWall(3, 4, 4, true, 3);
+        makeWall(4, 7, 4, false, 1);
+        makeWall(4, 3, 3, false, 2);
+        break;
     default:
     }
 }
