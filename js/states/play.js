@@ -69,12 +69,24 @@ Play.prototype = {
         
         game.add.existing(player);
         
-        monster = new Monster(game, 407, 573, 1, 1, 'monster', null);
+        monster = new Monster(game, 650, 735, 1, 1, 'monster', null);
         localObjects.add(monster);
+        monster = new Monster(game, 320, 410, 1, 1, 'monster', null);
+        localObjects.add(monster);
+        monster = new Monster(game, 950, 410, 1, 1, 'monster', null);
+        localObjects.add(monster);
+
+
+
+
         monster1 = new Monster(game, 353, 285, 10, 10, 'monster', null);
         localObjects.add(monster1);
         monster2 = new Monster(game, 558, 332, 10, 10, 'monster', null);
         localObjects.add(monster2);
+        monster3 = new Monster(game, 580, 110, 11, 10, 'monster', null);
+        localObjects.add(monster3);
+        monster4 = new Monster(game, 420, 510, 11, 9, 'monster', null);
+        localObjects.add(monster4);
         torch1 = new Torch(game, 250, 120, 0, 0, 'torch', null);
         localObjects.add(torch1);
         battery = new Battery(game, 400, 280, 1, 0, 'battery', null);
@@ -627,6 +639,25 @@ buildMap = function(room) {
         makeWall(4, 3, 2, false, 2);
         makeWall(6, 3, 4, true, 4);
         break;
+    case '119':
+        makeWall(9, 13, 9, true, 0);
+        makeWall(10, 13, 7, false, 1);
+        makeWall(16, 10, 3, true, 4);
+        makeWall(7, 10, 9, false, 2);
+        makeWall(7, 11, 2, true, 3);
+        makeWall(4, 12, 3, false, 2);
+        makeWall(4, 7, 5, true, 4);
+        makeWall(5, 7, 6, false, 1);
+        makeWall(10, 5, 2, true, 4);
+        makeWall(11, 5, 3, false, 1);
+        makeWall(13, 6, 2, true, 3);
+        makeWall(14, 7, 3, false, 1);
+        makeWall(16, 4, 3, true, 4);
+        makeWall(17, 4, 3, false, 1);
+        makeWall(16, 4, 3, true, 4);
+        makeWall(19, 5, 12, true, 3);
+        makeWall(12, 16, 12, false, 2)
+        makeWall(12, 17, 6, true, 3)
     default:
     }
 }
