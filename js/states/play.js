@@ -56,15 +56,6 @@ Play.prototype = {
 
     
         player = new Player(game, 200, 420, 'player', null, walls);
-        monster = new Monster(game, 407, 573, 1, 1, 'monster', null, walls);
-        torch1 = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
-        battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
-
-
-        localObjects.add(monster);
-        localObjects.add(torch1);
-        localObjects.add(battery);
-        
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
@@ -92,7 +83,7 @@ Play.prototype = {
         //game, x, y, key, destination, superX, superY, direction (1 left, 2 right, 3 up, 4 down)
         stair1 = new Staircase(game, 647, 1058, 'stairs', null, 1, 0, 4);
         localObjects.add(stair1);
-        stair2 = new Staircase(game, 100, 100, 'stairs', stair1, 10, 10, 3);
+        stair2 = new Staircase(game, 100, 20, 'stairs', stair1, 10, 10, 3);
         localObjects.add(stair2);
         stair3 = new Staircase(game, 432, 672, 'stairs', null, 11, 9, 4);
         localObjects.add(stair3);
@@ -695,16 +686,16 @@ makeWall = function (x, y, l, v, b) {
 }
 
 //pick up torch function
-torchAdd = function (player, torch) {
-    torch.destroy();
+torchAdd = function (player, t) {
+    t.destroy();
     torchCount++;
     game.itemCollect.play('', 0, 0.5, false, true);
     ////console.log(torchCount);
 }
 
 //pick up battery function
-batteryAdd = function (player, battery) {
-    battery.destroy();
+batteryAdd = function (player, b) {
+    b.destroy();
     batteryCount++;
     game.itemCollect.play('', 0, 0.5, false, true);
     ////console.log(batteryCount);
