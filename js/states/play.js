@@ -60,19 +60,10 @@ Play.prototype = {
         torch1 = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
         battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
 
-        //game, x, y, key, destination, superX, superY, direction (1 left, 2 right, 3 up, 4 down)
-        stair1 = new Staircase(game, 647, 1058, 'stairs', null, 1, 0, 4);
-        stair2 = new Staircase(game, 100, 100, 'stairs', stair1, 10, 10, 3);
-        stair3 = new Staircase(game, 432, 672, 'stairs', null, 11, 9, 4);
-        stair4 = new Staircase(game, 648, 56, 'stairs', stair3, 1, 1, 3);
 
         localObjects.add(monster);
         localObjects.add(torch1);
         localObjects.add(battery);
-        localObjects.add(stair1);
-        localObjects.add(stair2);
-        localObjects.add(stair3);
-        localObjects.add(stair4);
         
         
         lights = game.add.group();
