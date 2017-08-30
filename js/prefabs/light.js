@@ -1,18 +1,19 @@
 
-function Light(game, x, y, key, a, t) {
+function Light(game, x, y, superX, superY, key, a, t) {
     Phaser.Sprite.call(this, game, x, y, key);
     this.anchor.setTo(.5, .35);
     this.active = a;
     this.type = t;
     this.fl = 0;
-    game.physics.arcade.enable(this);
-    this.enableBody = true;
 
     spacebar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+    this.superX = superX;
+    this.superY = superY;
+    
     switch (this.type){
     	case 0:
-    		this.radius = 50;
+    		this.radius = 75;
     		this.charge = 1;
     		break;
     	case 1:
@@ -43,6 +44,7 @@ Light.prototype.update = function() {
 		this.visible = true;
 
         if(spacebar.justPressed() && this.type === 1){
+            game.physics.arcade.enable(this);
             this.active = false;
             this.body.velocity.x = 100 * Math.cos(player.rotation - Math.PI / 2 );
             this.body.velocity.y = 100 * Math.sin(player.rotation - Math.PI / 2 );

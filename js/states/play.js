@@ -4,33 +4,38 @@ var Play = function(game) {};
 Play.prototype = {
 
     preload: function() {
-        torchCount = 0;
-        batteryCount = 0;
+        torchCount = 10;
+        batteryCount = 10;
 		
 	},
 
     create: function() {
-		
+
+     game.physics.arcade.enable(this);
+     
+        game.input.mouse.capture = true;
+
         localObjects = game.add.group();
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.world.setBounds(0, 0, 1440, 1200);
         var bg = game.add.image(0, 0, 'background');
         bg.scale.setTo(3.2);
+        bg.sendToBack();
         
 
         menu = game.add.image(100, 100, 'menu');
         menu.exists = false;
-		pauseButton = game.add.button(650, 25, 'pause', function(){
+		pauseButton = game.add.button(550, 25, 'pause', function(){
 	        game.paused = !game.paused;
-            //console.log('paused:' + game.paused);
+            ////console.log('paused:' + game.paused);
             resumeButton.exists = true;
             resumeButton.bringToTop();
             pauseButton.exists = false;
             menu.bringToTop();
             menu.exists = true;
             },this);
-		resumeButton = game.add.button(650, 25, 'resume', function(){
+		resumeButton = game.add.button(550, 25, 'resume', function(){
             game.paused = !game.paused;
             resumeButton.exists = false;
             pauseButton.exists = true;
@@ -47,28 +52,36 @@ Play.prototype = {
 
         lwalls = game.add.group();
         walls = game.add.group();
+
+
     
-        player = new Player(game, 160, 420, 'player', null, walls);
-        monster = new Monster(game, 660, 685, 1, 1, 'monster', null, walls);
-        torch = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
+        player = new Player(game, 200, 420, 'player', null, walls);
+        monster = new Monster(game, 407, 573, 1, 1, 'monster', null, walls);
+        torch1 = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
         battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
 
+        //game, x, y, key, destination, superX, superY, direction (1 left, 2 right, 3 up, 4 down)
+        stair1 = new Staircase(game, 37, 400, 'stairs', null, 0, 0, 1);
+        stair2 = new Staircase(game, 429, 793, 'stairs', stair1, 1, 1, 2);
+
         localObjects.add(monster);
-        localObjects.add(torch);
+        localObjects.add(torch1);
         localObjects.add(battery);
+        localObjects.add(stair1);
+        localObjects.add(stair2);
+        
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        glowstick = new Light(game, player.x, player.y, 'torch', true, 1);
-        //flashlight = new Light(game, player.x, player.y, 'torch', true, 2);
+        
+        glowstick = new Light(game, player.x, player.y, player.superX, player.superY, 'torch', true, 0);
+        flashlight = new Light(game, player.x, player.y, player.superX, player.superY, 'torch', false, 2);
+        al = 0;
         //light2 = new Light(game, 500, 400, 'torch', false, 1);
         lights.add(glowstick);
-        //lights.add(flashlight);
+        lights.add(flashlight);
         
         game.add.existing(player);
-        // lightCircleImage
-        //lightCircle = game.add.image(player.x, player.y, 'circle')
-        //lightCircle.anchor.setTo(0.5, 0.5);
         game.stage.backgroundColor = 0x882110;
 
 
@@ -109,13 +122,42 @@ Play.prototype = {
         //game.world.scale.setTo(.5);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON);
         buildMap('00');
+        
+        game.input.onDown.add(function(){
+        	if(al < 2){
+                    if(al == 1){
+                        if(lights.children[1].active){
+                            //flashlight off sound
+                            game.flashOff.play('', 0, 0.35, false, true);
+                        }else{
+                            //flashlight on sound
+                            game.flashOn.play('', 0, 0.35, false, true);
+                        }
+                    }
+                    if(al == 0){
+                        if(lights.children[0].active){
+                            //glowstick off sound
+                            game.glowOff.play('', 0, 0.75, false, true);
+                        }else{
+                            //glowstick on sound
+                            game.glowOn.play('', 0, 0.75, false, true);
+                        }
+                    }
+        		lights.children[al].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
+        		lights.children[al].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
+            	lights.children[al].active = !lights.children[al].active;
+            }
+        }, this);
 
     pauseButton.bringToTop();
+
+    game.time.events.add(Phaser.Timer.SECOND * 15, ambient1, this);
 },
 
     update: function() {
         document.getElementById("torchCount").innerHTML = torchCount;
         document.getElementById("batteryCount").innerHTML = batteryCount;
+
 
         hcircle.x = player.x;
         hcircle.y = player.y;
@@ -124,13 +166,15 @@ Play.prototype = {
         bmd.context.fillStyle = 'rgb(100, 100, 100)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
-        //console.log(this.bitmap)
+        ////console.log(this.bitmap)
         this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
+
+
         
-        
+      
 lights.forEach(function(light){
-if (light.charge > 0 && (light.active || light.type === 1)){
+if (light.exists && light.charge > 0 && (light.active || light.type === 1)){
         var stageCorners = [];
         ncircle = new Phaser.Circle(light.x, light.y, light.radius * 2);
 		
@@ -272,7 +316,7 @@ if (light.charge > 0 && (light.active || light.type === 1)){
             }
         
         }
-        //console.log(points.length)
+        ////console.log(points.length)
         
         // !!!!! The next 22 lines are copied directly from https://gamemechanicexplorer.com/#raycasting-3 with no modifications except to the light source
         // Now sort the points clockwise around the light
@@ -384,8 +428,6 @@ if (light.charge > 0 && (light.active || light.type === 1)){
         this.bitmap.dirty = true;
         this.rayBitmap.dirty = true;
 
-        //lightCircle.x = player.x;
-        //lightCircle.y = player.y;
     },
 
 
@@ -443,15 +485,33 @@ getWallIntersection = function (ray, wall_group) {
 }
 
 buildMap = function(room) {
-    localObjects.forEach(function(object){
-    console.log(object)
+    glowstick.superX = player.superX;
+    glowstick.superY = player.superY;
+    flashlight.superX = player.superX;
+    flashlight.superY = player.superY;
+
+    lights.forEach(function(object){
+        if (object.active == true){
+            object.superX = player.superX;
+            object.superY = player.superY;
+        }
+
         if (object.superX == player.superX && object.superY == player.superY){
             object.exists = true;
         }
         else{
             object.exists = false;
         }
-    }, this)
+    }, this);
+
+    localObjects.forEach(function(object){
+        if (object.superX == player.superX && object.superY == player.superY){
+            object.exists = true;
+        }
+        else{
+            object.exists = false;
+        }
+    }, this);
 
 
 
@@ -476,7 +536,7 @@ buildMap = function(room) {
     makeWall(1, 2, 3, true, 0);
     walls.callAll('destroy');
     while(walls.children.length){
-   walls.forEach(function(wall){
+   		walls.forEach(function(wall){
         wall.destroy();
     }, this);}
     while(lwalls.children.length){
@@ -505,17 +565,19 @@ buildMap = function(room) {
         makeWall(3, 3, 4, false, 2);
         makeWall(0, 0, 6, true, 4);
         makeWall(1, 0, 10, false, 1);
-        makeWall(10, 1, 21, true, 3);
+        makeWall(10, 1, 20, true, 3);
         makeWall(7, 9, 13, true, 3);
+        makeWall(8, 20, 3, false, 1 );
         break;
     case '11':
-        makeWall(7, 0, 3, true, 0);
-        makeWall(10, 0, 3, true, 0);
-        makeWall(2, 2, 5, false, 2);
+        makeWall(8, 0, 3, false, 1);
+        makeWall(7, 0, 2, true, 4);
+        makeWall(10, 1, 2, true, 3);
+        makeWall(3, 2, 5, false, 1);
         makeWall(11, 2, 5, false, 1);
-        makeWall(2, 3, 10, true, 3);
+        makeWall(2, 2, 10, true, 4);
         makeWall(15, 3, 10, true, 3);
-        makeWall(3, 12, 4, false, 1);
+        makeWall(2, 12, 5, false, 2);
         makeWall(10, 12, 5, false, 2);
         makeWall(7, 12, 3, true, 4);
         makeWall(7, 15, 5, false, 2);
@@ -583,12 +645,24 @@ makeWall = function (x, y, l, v, b) {
 torchAdd = function (player, torch) {
     torch.kill();
     torchCount++;
-    //console.log(torchCount);
+    game.itemCollect.play('', 0, 0.5, false, true);
+    ////console.log(torchCount);
 }
 
 //pick up battery function
 batteryAdd = function (player, battery) {
     battery.kill();
     batteryCount++;
-    //console.log(batteryCount);
+    game.itemCollect.play('', 0, 0.5, false, true);
+    ////console.log(batteryCount);
+}
+
+ambient1 = function() {
+    game.ambient.play('', 0, 0.4, false, true);
+    this.time.events.add(Phaser.Timer.SECOND * 20, ambient2, this);
+}
+
+ambient2 = function() {
+    game.ambient2.play('', 0, 0.4, false, true);
+    this.time.events.add(Phaser.Timer.SECOND * 20, ambient1, this);
 }

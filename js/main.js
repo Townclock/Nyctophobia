@@ -1,6 +1,7 @@
 var game;
 
 var player,
+	al,
 	f = 0,
 	innerCircle,
 	outerCircle,
@@ -13,6 +14,9 @@ var player,
 	a,
 	s,
 	d,
+	k1,
+	k2,
+	k3,
 	vtotal,
 	torchCount = 0,
 	batteryCount = 0;

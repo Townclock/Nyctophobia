@@ -15,25 +15,58 @@ Monster.prototype.constructor = Monster;
 Monster.prototype.update = function() {
 
 
-    if (lights.length >= 0)
+    if (lights.length >= 0 && this.superX === player.superX && this.superY === player.superY)
     {
-        var nearestLight = lights.getAt(0);
-        for(i = 1; i < lights.length; i++){
-            if (Phaser.Math.distance(lights.getAt(i).x, lights.getAt(i).y, this.x, this.y) < Phaser.Math.distance(nearestLight.x, nearestLight.y, this.x, this.y)){
-                nearestLight = lights.getAt(i);
+        var nearestLight = null;
+        
+        for(i = 0; i < lights.length; i++){
+        	var light = lights.children[i];
+            if((light.active === true || light.type === 1)
+            && light.charge > 0
+            && Phaser.Math.distance(light.x, light.y, this.x, this.y) < light.radius
+            && (light.type < 2
+            || Math.abs(light.rotation + Math.PI / 2 - game.physics.arcade.angleBetween(this, light)) < Math.PI/8
+            || Math.abs(((Math.PI * 2 + light.rotation) % (Math.PI * 2)) + Math.PI / 2 - (Math.PI * 2 + game.physics.arcade.angleBetween(this, light)) % (Math.PI * 2)) < Math.PI/8 ) 
+            &&(nearestLight == null 
+            || Phaser.Math.distance(light.x, light.y, this.x, this.y) < Phaser.Math.distance(nearestLight.x, nearestLight.y, this.x, this.y))){
+            	var line = new Phaser.Line(this.x, this.y, light.x, light.y);
+            	if (!getWallIntersection(line, lwalls)){
+                	nearestLight = light;
+                }
             }
             //console.log('Distance of '+ i + ' is ' + Phaser.Math.distance(lights.getAt(i).x, lights.getAt(i).y, this.x, this.y));
         }
-
-                game.physics.arcade.moveToObject(this, nearestLight, 100);
-                this.rotation = game.physics.arcade.angleBetween(this, lights.getChildAt(0)) + (Math.PI / 2);
-                //console.log('moving to 0') 
+		if(nearestLight != null){
+			game.physics.arcade.moveToObject(this, nearestLight, 100);
+   	     	this.rotation = game.physics.arcade.angleBetween(this, nearestLight) + (Math.PI / 2);
+   	 	    //console.log('moving to 0') 
+            if(temp2 == 1){
+                //monster chase music
+                game.monChase.play('', 0, 0.3, false, true);
+                temp2 = 0;
+                rand = Math.random();
+                if(rand <= 0.33){
+                    game.monGrowl.play('', 0, 0.3, false, true);
+                }
+                else if(rand <= 0.66){
+                    game.monGrowl2.play('', 0, 0.4, false, true);
+                }else{
+                    game.monGrowl3.play('', 0, 0.4, false, true);
+                }
+            }
+   	    }else{
+            game.monChase.stop();
+            temp2 = 1;
+        }
     }
 
     function destroyPlayer(player, monster) {
 
         //switch to GameOver state if the player collides with an enemy
         player.kill();
+        game.bg.stop();
+        game.walk.stop();
+        game.monChase.stop();
         game.state.start('GameOver');
     }
     
