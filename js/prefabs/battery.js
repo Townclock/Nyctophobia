@@ -4,6 +4,7 @@ function Battery(game, x, y, superX, superY,  key, frame) {
 	game.physics.enable(this);
 	this.enableBody = true;
 	this.body.immovable = true;
+	this.scale.setTo(.5);
 
     this.superX = superX;
     this.superY = superY;

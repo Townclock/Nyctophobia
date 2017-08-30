@@ -16,6 +16,7 @@ Load.prototype = {
 		game.load.image('resume', 'resume.png');
 		game.load.image('menu', 'menu.png');
 		game.load.image('stairs', 'stair.png');
+		game.load.image('glowStick', 'glowstick.png');
 
         game.load.path = 'assets/audio/';
         game.load.audio('ambient', 'ambient.mp3');

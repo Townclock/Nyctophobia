@@ -72,6 +72,7 @@ Monster.prototype.update = function() {
     
     //checks player collision with enemy
     game.physics.arcade.collide(this, walls);
+    if(this.exists)
     game.physics.arcade.overlap(player, this, destroyPlayer, null, game);
 
 

@@ -16,6 +16,8 @@ function Light(game, x, y, superX, superY, key, a, t) {
     	case 0:
     		this.radius = 75;
     		this.charge = 1;
+    		this.scale.setTo(.7);
+    		this.anchor.setTo(.5, .2);
     		break;
     	case 1:
     		this.radius = 150;
@@ -68,7 +70,7 @@ Light.prototype.update = function() {
 			this.anchor.x = .5;
 			this.anchor.y = .2;
 			if(this.enableBody){
-				if(Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y) > 10){
+				if(Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y) > 20){
 					this.body.velocity.x *= .99;
 					this.body.velocity.y *= .99;
 					this.body.angularVelocity *= .97;

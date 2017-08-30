@@ -59,7 +59,7 @@ Play.prototype = {
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        glowstick = new Light(game, player.x, player.y, player.superX, player.superY, '', true, 0);
+        glowstick = new Light(game, player.x, player.y, player.superX, player.superY, 'glowStick', true, 0);
         flashlight = new Light(game, player.x, player.y, player.superX, player.superY, 'light', false, 2);
 
         al = 0;
@@ -171,11 +171,11 @@ Play.prototype = {
         hcircle.y = player.y;
         
         bmd.cls();
-        bmd.context.fillStyle = 'rgb(100, 100, 100)';
+        bmd.context.fillStyle = 'rgb(00, 00, 00)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         ////console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
+        this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
 
 
@@ -685,7 +685,7 @@ makeWall = function (x, y, l, v, b) {
 
 //pick up torch function
 torchAdd = function (player, torch) {
-    torch.kill();
+    torch.destroy();
     torchCount++;
     game.itemCollect.play('', 0, 0.5, false, true);
     ////console.log(torchCount);
@@ -693,7 +693,7 @@ torchAdd = function (player, torch) {
 
 //pick up battery function
 batteryAdd = function (player, battery) {
-    battery.kill();
+    battery.destroy();
     batteryCount++;
     game.itemCollect.play('', 0, 0.5, false, true);
     ////console.log(batteryCount);
