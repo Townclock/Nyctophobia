@@ -30,7 +30,7 @@ Player.prototype.update = function() {
 	game.physics.arcade.collide(this, walls);
 
 	//collision with torch and battery
-    game.physics.arcade.overlap(this, torch, torchAdd, null, this);
+    game.physics.arcade.overlap(this, torch1, torchAdd, null, this);
 	game.physics.arcade.overlap(this, battery, batteryAdd, null, this);
 
 	//enable player rotation
