@@ -18,6 +18,8 @@ function Player(game, x, y, key, frame, walls) {
 	k1 = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 	k2 = game.input.keyboard.addKey(Phaser.Keyboard.Q);
 	k3 = game.input.keyboard.addKey(Phaser.Keyboard.E);
+
+    pause = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 }
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);  
@@ -171,5 +173,18 @@ if(k1.justPressed() && !lights.children[0].active){
             }
         }
 
+    if (pause.justPressed()){
+        if (!game.paused){
+            game.paused = true;
+            resumeButton.exists = true;
+            resumeButton.bringToTop();
+            pauseButton.exists = false;
+            menu.bringToTop();
+            menu.exists = true;
+
+        }
+
+
+    }
 
 }
