@@ -4,9 +4,11 @@ function Monster(game, x, y, superX, superY, key, frame) {
     game.physics.enable(this);
     this.enableBody = true;
     this.anchor.set(.5);
-
+	this.body.setSize(90, 90, 20, 10);
     this.superX = superX;
     this.superY = superY;
+    
+    this.animations.add('spoop');
 }
 
 Monster.prototype = Object.create(Phaser.Sprite.prototype);  
@@ -14,14 +16,14 @@ Monster.prototype.constructor = Monster;
 
 Monster.prototype.update = function() {
 
-
     if (lights.length >= 0 && this.superX === player.superX && this.superY === player.superY)
     {
         var nearestLight = null;
         
         for(i = 0; i < lights.length; i++){
         	var light = lights.children[i];
-            if((light.active === true || light.type === 1)
+            if(light.exists
+            && (light.active === true || light.type === 1)
             && light.charge > 0
             && Phaser.Math.distance(light.x, light.y, this.x, this.y) < light.radius
             && (light.type < 2
@@ -42,7 +44,8 @@ Monster.prototype.update = function() {
    	 	    //console.log('moving to 0') 
             if(temp2 == 1){
                 //monster chase music
-                game.monChase.play('', 0, 0.3, false, true);
+                //game.monChase.play('', 0, 0.3, false, true);
+                this.animations.play('spoop', 10, true);
                 temp2 = 0;
                 rand = Math.random();
                 if(rand <= 0.33){
@@ -55,7 +58,9 @@ Monster.prototype.update = function() {
                 }
             }
    	    }else{
-            game.monChase.stop();
+            //game.monChase.stop();
+            this.animations.stop();
+			this.frame = 0;
             temp2 = 1;
         }
     }
@@ -63,16 +68,16 @@ Monster.prototype.update = function() {
     function destroyPlayer(player, monster) {
 
         //switch to GameOver state if the player collides with an enemy
+        player.ded = true;
         player.kill();
         game.bg.stop();
         game.walk.stop();
-        game.monChase.stop();
+        //game.monChase.stop();
         game.state.start('GameOver');
     }
     
     //checks player collision with enemy
     game.physics.arcade.collide(this, walls);
-    if(this.exists)
     game.physics.arcade.overlap(player, this, destroyPlayer, null, game);
 
 

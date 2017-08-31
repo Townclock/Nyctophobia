@@ -13,3 +13,6 @@ function Battery(game, x, y, superX, superY,  key, frame) {
 Battery.prototype = Object.create(Phaser.Sprite.prototype);  
 Battery.prototype.constructor = Battery;
 
+Battery.prototype.update = function() {
+	game.physics.arcade.overlap(player, this, batteryAdd, null, this);
+}

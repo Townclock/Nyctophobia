@@ -4,12 +4,31 @@ var Play = function(game) {};
 Play.prototype = {
 
     preload: function() {
-        torchCount = 10;
-        batteryCount = 10;
-		
+        torchCount = 0;
+        batteryCount = 0;
 	},
 
     create: function() {
+	// torch position array
+	torchArray= [
+		{x:390, y:115, superX:1, superY:0 },
+		{x:455, y:110, superX:10, superY:10 },
+		{x:345, y:510, superX:10, superY:10 },
+		{x:145, y:500, superX:11, superY:10 },
+		{x:1295, y:360, superX:11, superY:9 },
+		{x:560, y:270, superX:1, superY:1 },
+		{x:927, y:300, superX:1, superY:1 },
+		{x:510, y:430, superX:1, superY:1 },
+		{x:250, y:640, superX:1, superY:1 },
+		{x:830, y:600, superX:1, superY:1 },
+		{x:250, y:120, superX:0, superY:0}
+	]
+	batteryArray = [
+		{x:450, y:280, superX:1, superY:0},
+		{x:755, y:322, superX:10, superY:10},
+		{x:825, y:384, superX:11, superY:9}
+	]
+
 
      game.physics.arcade.enable(this);
      
@@ -19,10 +38,6 @@ Play.prototype = {
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.world.setBounds(0, 0, 1440, 1200);
-        var bgimg = game.add.image(0, 0, 'background');
-        bgimg.scale.setTo(3.2);
-        bgimg.sendToBack();
-        
 
         menu = game.add.image(100, 100, 'menu');
         menu.exists = false;
@@ -69,7 +84,7 @@ Play.prototype = {
         
         game.add.existing(player);
         
-        monster = new Monster(game, 650, 735, 1, 1, 'monster', null);
+        monster = new Monster(game, 650, 535, 1, 1, 'monster', null);
         localObjects.add(monster);
         monster = new Monster(game, 320, 410, 1, 1, 'monster', null);
         localObjects.add(monster);
@@ -87,10 +102,18 @@ Play.prototype = {
         localObjects.add(monster3);
         monster4 = new Monster(game, 420, 510, 11, 9, 'monster', null);
         localObjects.add(monster4);
-        torch1 = new Torch(game, 250, 120, 0, 0, 'torch', null);
-        localObjects.add(torch1);
-        battery = new Battery(game, 400, 280, 1, 0, 'battery', null);
-		localObjects.add(battery);
+        
+        
+        for (tort in torchArray){
+        	tor = torchArray[tort];
+        	torch1 = new Torch(game, tor.x, tor.y, tor.superX, tor.superY, 'torch', null);
+        	localObjects.add(torch1);
+        }
+        for (batt in batteryArray){
+        	bat = batteryArray[batt];
+        	battery = new Battery(game, bat.x, bat.y, bat.superX, bat.superY, 'battery', null);
+			localObjects.add(battery);
+		}
         
         //game, x, y, key, destination, superX, superY, direction (1 left, 2 right, 3 up, 4 down)
         stair1 = new Staircase(game, 647, 1058, 'stairs', null, 1, 0, 4);
@@ -102,8 +125,13 @@ Play.prototype = {
         stair4 = new Staircase(game, 648, 56, 'stairs', stair3, 1, 1, 3);
         localObjects.add(stair4);
 
-        game.stage.backgroundColor = 0x882110;
+		winstairs = new Staircase(game, 850, 790, 'stairs', null, 1, 1, 2);
+		game.physics.arcade.enable(winstairs);
+		winstairs.enableBody = true;
+		localObjects.add(winstairs);
 
+        game.stage.backgroundColor = 0x882110;
+		
 
         // bitmap for the light cones
         this.bitmap = this.game.add.bitmapData(this.game.world.width, this.game.world.height);
@@ -171,7 +199,11 @@ Play.prototype = {
         }, this);
 
     pauseButton.bringToTop();
-
+    
+	bgimg = game.add.image(0, 0, 'background');
+    bgimg.scale.setTo(3.2);
+    bgimg.sendToBack();
+        
     game.time.events.add(Phaser.Timer.SECOND * 15, ambient1, this);
 },
 
