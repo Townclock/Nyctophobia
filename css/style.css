@@ -19,13 +19,7 @@ canvas {
 .inventory {
     color: #facade;
     float: left;
-    width : 25%;
-    height :  200px;
-}
-
-.notes {
-    float: right;
-    width : 25%;
+    width : 10%;
     height :  200px;
 }
 
