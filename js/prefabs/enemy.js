@@ -9,6 +9,7 @@ function Monster(game, x, y, superX, superY, key, frame) {
     this.superY = superY;
     
     this.animations.add('spoop');
+    growl = true;
 }
 
 Monster.prototype = Object.create(Phaser.Sprite.prototype);  
@@ -41,12 +42,13 @@ Monster.prototype.update = function() {
 		if(nearestLight != null){
 			game.physics.arcade.moveToObject(this, nearestLight, 100);
    	     	this.rotation = game.physics.arcade.angleBetween(this, nearestLight) + Math.PI;
+            this.animations.play('spoop', 6, true);
    	 	    //console.log('moving to 0') 
-            if(temp2 == 1){
+            if(growl){
                 //monster chase music
                 //game.monChase.play('', 0, 0.3, false, true);
-                this.animations.play('spoop', 10, true);
-                temp2 = 0;
+                growl = false;
+                game.time.events.add(Phaser.Timer.SECOND * 3, monsterGrowl, this);
                 rand = Math.random();
                 if(rand <= 0.33){
                     game.monGrowl.play('', 0, 0.3, false, true);
@@ -61,9 +63,12 @@ Monster.prototype.update = function() {
             //game.monChase.stop();
             this.animations.stop();
 			this.frame = 0;
-            temp2 = 1;
         }
     }
+
+    function monsterGrowl() {
+        growl = true;
+    }  
 
     function destroyPlayer(player, monster) {
 

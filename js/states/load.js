@@ -25,11 +25,13 @@ Load.prototype = {
         game.load.audio('ambient2', 'ambient2.mp3');
         game.load.audio('bg', 'background.mp3');
         game.load.audio('bg2', 'background2.mp3');
+        game.load.audio('death', 'death.mp3');
         game.load.audio('flashOff', 'flashlightoff.mp3');
         game.load.audio('flashOn', 'flashlighton.mp3');
         game.load.audio('glowOff', 'glowstickoff.mp3');
         game.load.audio('glowOn', 'glowstickon.mp3');
         game.load.audio('itemCollect', 'itemcollect.mp3');
+        game.load.audio('loseSound', 'losesound.mp3');
         //game.load.audio('monChase', 'monsterchase.mp3');
         game.load.audio('monGrowl', 'monstergrowl.mp3');
         game.load.audio('monGrowl2', 'monstergrowl2.mp3');
@@ -39,6 +41,7 @@ Load.prototype = {
         game.load.audio('torchError', 'torcherror.mp3');
         game.load.audio('torchLight', 'torchlight.mp3');
         game.load.audio('walk', 'walk.mp3');
+        game.load.audio('winSound', 'winsound.mp3');
     },
 
     create: function() {
@@ -47,12 +50,14 @@ Load.prototype = {
         game.ambient2 = game.add.audio('ambient2');
         game.bg = game.add.audio('bg');
         game.bg2 = game.add.audio('bg2');
+        game.death = game.add.audio('death');
         game.flashOff = game.add.audio('flashOff');
         game.flashOn = game.add.audio('flashOn');
         game.glowOff = game.add.audio('glowOff');
         game.glowOn = game.add.audio('glowOn');
         game.itemCollect = game.add.audio('itemCollect');
-        game.monChase = game.add.audio('monChase');
+        game.loseSound = game.add.audio('loseSound');
+        //game.monChase = game.add.audio('monChase');
         game.monGrowl = game.add.audio('monGrowl');
         game.monGrowl2 = game.add.audio('monGrowl2');
         game.monGrowl3 = game.add.audio('monGrowl3');
@@ -61,6 +66,7 @@ Load.prototype = {
         game.torchError = game.add.audio('torchError');
         game.torchLight = game.add.audio('torchLight');
         game.walk = game.add.audio('walk');
+        game.winSound = game.add.audio('winSound');
 
         game.allowMultiple = true;
     },

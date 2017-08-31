@@ -85,7 +85,7 @@ Player.prototype.update = function() {
 	}
 
 	if (this.body.velocity.x != 0 || this.body.velocity.y != 0) {
-		this.animations.play('walk', 4, true);
+		this.animations.play('walk', 3.25, true);
 		if (temp == 1) {
 			game.walk.play('', 0, 0.5, true, true);
 			temp = 0;
