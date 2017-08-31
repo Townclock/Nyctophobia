@@ -1,11 +1,12 @@
 //create player object
-function Player(game, x, y, key, frame, walls) {
+function Player(game, x, y, key, frame) {
 	Phaser.Sprite.call(this, game, x, y, key, frame);
 	this.animations.add('walk');
 	game.physics.enable(this);
 	this.enableBody = true;
 	this.body.setSize(70, 70, 10, 30);
 	this.anchor.set(.5);
+	this.ded = false;
 
     this.superX = 0;
     this.superY = 0;
@@ -30,11 +31,11 @@ Player.prototype.update = function() {
 
 	//collision with walls
 	game.physics.arcade.collide(this, walls);
-
-	//collision with torch and battery
-    game.physics.arcade.overlap(this, torch1, torchAdd, null, this);
-	game.physics.arcade.overlap(this, battery, batteryAdd, null, this);
-
+	game.physics.arcade.overlap(this, winstairs, null, 
+        function(){
+        	game.state.start('GameOver');   
+    }, this);
+	
 	//enable player rotation
 	this.rotation = game.physics.arcade.angleToPointer(this) + (Math.PI / 2);
 

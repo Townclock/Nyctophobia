@@ -13,6 +13,7 @@ Title.prototype = {
         titleImage.alpha = 0;
         game.input.mouse.capture = true;
         f = -60;
+        game.sound.mute = false;
         //background music
         game.bg2.play('', 0, 0.2, true, true);
     },

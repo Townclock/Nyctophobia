@@ -4,12 +4,31 @@ var Play = function(game) {};
 Play.prototype = {
 
     preload: function() {
-        torchCount = 10;
-        batteryCount = 10;
-		
+        torchCount = 0;
+        batteryCount = 0;
 	},
 
     create: function() {
+	// torch position array
+	torchArray= [
+		{x:390, y:115, superX:1, superY:0 },
+		{x:455, y:110, superX:10, superY:10 },
+		{x:345, y:510, superX:10, superY:10 },
+		{x:145, y:500, superX:11, superY:10 },
+		{x:1295, y:360, superX:11, superY:9 },
+		{x:560, y:270, superX:1, superY:1 },
+		{x:927, y:300, superX:1, superY:1 },
+		{x:510, y:430, superX:1, superY:1 },
+		{x:250, y:640, superX:1, superY:1 },
+		{x:830, y:600, superX:1, superY:1 },
+		{x:250, y:120, superX:0, superY:0}
+	]
+	batteryArray = [
+		{x:450, y:280, superX:1, superY:0},
+		{x:755, y:322, superX:10, superY:10},
+		{x:825, y:384, superX:11, superY:9}
+	]
+
 
      game.physics.arcade.enable(this);
      
@@ -19,10 +38,6 @@ Play.prototype = {
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.world.setBounds(0, 0, 1440, 1200);
-        var bg = game.add.image(0, 0, 'background');
-        bg.scale.setTo(3.2);
-        bg.sendToBack();
-        
 
         menu = game.add.image(100, 100, 'menu');
         menu.exists = false;
@@ -56,26 +71,10 @@ Play.prototype = {
 
     
         player = new Player(game, 200, 420, 'player', null, walls);
-        monster = new Monster(game, 407, 573, 1, 1, 'monster', null, walls);
-        torch1 = new Torch(game, 250, 120, 0, 0, 'torch', null, walls);
-        battery = new Battery(game, 400, 280, 1, 0, 'battery', null, walls);
-
-        //game, x, y, key, destination, superX, superY, direction (1 left, 2 right, 3 up, 4 down)
-        stair1 = new Staircase(game, 647, 1058, 'stairs', null, 1, 0, 4);
-        stair2 = new Staircase(game, 100, 100, 'stairs', stair1, 10, 10, 3);
-        stair3 = new Staircase(game, 432, 672, 'stairs', null, 11, 9, 4);
-        stair4 = new Staircase(game, 648, 56, 'stairs', stair3, 1, 1, 3);
-
-        localObjects.add(monster);
-        localObjects.add(torch1);
-        localObjects.add(battery);
-        localObjects.add(stair1);
-        localObjects.add(stair2);
-        
         
         lights = game.add.group();
         //game, x, y, key, active, type (0 glowstick, 1 torch, 2 flashlight)
-        glowstick = new Light(game, player.x, player.y, player.superX, player.superY, '', true, 0);
+        glowstick = new Light(game, player.x, player.y, player.superX, player.superY, 'glowStick', true, 0);
         flashlight = new Light(game, player.x, player.y, player.superX, player.superY, 'light', false, 2);
 
         al = 0;
@@ -84,14 +83,61 @@ Play.prototype = {
         lights.add(flashlight);
         
         game.add.existing(player);
-        game.stage.backgroundColor = 0x882110;
+        
+        monster = new Monster(game, 650, 535, 1, 1, 'monster', null);
+        localObjects.add(monster);
+        monster = new Monster(game, 320, 410, 1, 1, 'monster', null);
+        localObjects.add(monster);
+        monster = new Monster(game, 950, 410, 1, 1, 'monster', null);
+        localObjects.add(monster);
 
+
+
+
+        monster1 = new Monster(game, 353, 285, 10, 10, 'monster', null);
+        localObjects.add(monster1);
+        monster2 = new Monster(game, 558, 332, 10, 10, 'monster', null);
+        localObjects.add(monster2);
+        monster3 = new Monster(game, 580, 110, 11, 10, 'monster', null);
+        localObjects.add(monster3);
+        monster4 = new Monster(game, 420, 510, 11, 9, 'monster', null);
+        localObjects.add(monster4);
+        
+        
+        for (tort in torchArray){
+        	tor = torchArray[tort];
+        	torch1 = new Torch(game, tor.x, tor.y, tor.superX, tor.superY, 'torch', null);
+        	localObjects.add(torch1);
+        }
+        for (batt in batteryArray){
+        	bat = batteryArray[batt];
+        	battery = new Battery(game, bat.x, bat.y, bat.superX, bat.superY, 'battery', null);
+			localObjects.add(battery);
+		}
+        
+        //game, x, y, key, destination, superX, superY, direction (1 left, 2 right, 3 up, 4 down)
+        stair1 = new Staircase(game, 647, 1058, 'stairs', null, 1, 0, 4);
+        localObjects.add(stair1);
+        stair2 = new Staircase(game, 100, 20, 'stairs', stair1, 10, 10, 3);
+        localObjects.add(stair2);
+        stair3 = new Staircase(game, 432, 672, 'stairs', null, 11, 9, 4);
+        localObjects.add(stair3);
+        stair4 = new Staircase(game, 648, 56, 'stairs', stair3, 1, 1, 3);
+        localObjects.add(stair4);
+
+		winstairs = new Staircase(game, 850, 790, 'stairs', null, 1, 1, 2);
+		game.physics.arcade.enable(winstairs);
+		winstairs.enableBody = true;
+		localObjects.add(winstairs);
+
+        game.stage.backgroundColor = 0x882110;
+		
 
         // bitmap for the light cones
         this.bitmap = this.game.add.bitmapData(this.game.world.width, this.game.world.height);
         this.bitmap.context.fillStyle = 'rgb(255,255,255)';
         this.bitmap.context.strokeStyle = 'rgb(255,255,255)';
-        lightBitmap = this.game.add.image(0,0, this.bitmap);
+        lightBitmap = this.game.add.image(0, 0, this.bitmap);
 
         //lightBitmap.fixedToCamera = true;
 
@@ -110,6 +156,7 @@ Play.prototype = {
         outerCircle = new Phaser.Circle(player.x, player.y, 300);
         
         hcircle = new Phaser.Circle(player.x, player.y, 60);
+        scircle = new Phaser.Circle(player.x, player.y, 2);
         
         circleBitmap.blendMode = Phaser.blendModes.MULTIPLY;
         
@@ -152,7 +199,11 @@ Play.prototype = {
         }, this);
 
     pauseButton.bringToTop();
-
+    
+	bgimg = game.add.image(0, 0, 'background');
+    bgimg.scale.setTo(3.2);
+    bgimg.sendToBack();
+        
     game.time.events.add(Phaser.Timer.SECOND * 15, ambient1, this);
 },
 
@@ -164,11 +215,11 @@ Play.prototype = {
         hcircle.y = player.y;
         
         bmd.cls();
-        bmd.context.fillStyle = 'rgb(100, 100, 100)';
+        bmd.context.fillStyle = 'rgb(00, 00, 00)';
         bmd.context.fillRect(0,0, this.game.world.width, this.game.world.height);
         // fill the stage with darkness
         ////console.log(this.bitmap)
-        this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
+        this.bitmap.context.fillStyle = 'rgb(00, 00, 00)';
         this.bitmap.context.fillRect(0, 0, this.game.world.width, this.game.world.height);
 
 
@@ -180,7 +231,8 @@ if (light.exists && light.charge > 0 && (light.active || light.type === 1)){
         ncircle = new Phaser.Circle(light.x, light.y, light.radius * 2);
 		
 		if (light.type > 1){
-        	scircle = new Phaser.Circle(light.x, light.y, 2);
+        	scircle.x = light.x;
+        	scircle.y = light.y;
         	stageCorners.push(scircle.circumferencePoint(Math.PI + game.physics.arcade.angleToPointer(player)));
 		
 			for (var x = 0; x <= 12; x++){
@@ -584,6 +636,60 @@ buildMap = function(room) {
         makeWall(7, 15, 5, false, 2);
         makeWall(12, 13, 3, true, 3);
         break;
+    case '1010':
+        makeWall(0, 0, 10, true, 0);
+        makeWall(1, 0, 8, false, 1);
+        makeWall(1, 9, 3, false, 1);
+        makeWall(4, 10, 16, false, 1);
+        makeWall(3, 10, 1, false, 3);
+        makeWall(8, 1, 1, false, 3);
+        makeWall(9, 1, 5, false, 1);
+        makeWall(13, 2, 2, true, 3);
+        makeWall(14, 3, 2, false, 1);
+        makeWall(15, 4, 4, true, 3);
+        makeWall(3, 3, 2, false, 0);
+        makeWall(3, 5, 2, true, 0);
+        makeWall(4, 6, 1, false, 1);
+        makeWall(6, 3, 5, true, 0);
+        makeWall(7, 4, 1, false, 1);
+        makeWall(7, 7, 1, false, 1);
+        makeWall(9, 4, 4, true, 0);
+        makeWall(10, 4, 1, false, 1);
+        makeWall(12, 6, 2, true, 0);
+        makeWall(16, 7, 4, false, 1);
+        break;
+    case '1110':
+        makeWall(0, 0, 8, true, 0);
+        makeWall(1, 0, 9, false, 1);
+        makeWall(0, 10, 10, false, 0);
+        makeWall(9, 3, 7, true, 4);
+        makeWall(10, 3, 3, false, 1);
+        makeWall(12, 0, 3, true, 4);
+        makeWall(3, 3, 1, false, 2);
+        makeWall(3, 4, 4, true, 3);
+        makeWall(4, 7, 3, false, 1);
+        makeWall(4, 3, 2, false, 2);
+        makeWall(6, 3, 4, true, 4);
+        break;
+    case '119':
+        makeWall(9, 13, 9, true, 0);
+        makeWall(10, 13, 7, false, 1);
+        makeWall(16, 10, 3, true, 4);
+        makeWall(7, 10, 9, false, 2);
+        makeWall(7, 11, 2, true, 3);
+        makeWall(4, 12, 3, false, 2);
+        makeWall(4, 7, 5, true, 4);
+        makeWall(5, 7, 6, false, 1);
+        makeWall(10, 5, 2, true, 4);
+        makeWall(11, 5, 3, false, 1);
+        makeWall(13, 6, 2, true, 3);
+        makeWall(14, 7, 3, false, 1);
+        makeWall(16, 4, 3, true, 4);
+        makeWall(17, 4, 3, false, 1);
+        makeWall(16, 4, 3, true, 4);
+        makeWall(19, 5, 12, true, 3);
+        makeWall(12, 16, 12, false, 2)
+        makeWall(12, 17, 6, true, 3)
     default:
     }
 }
@@ -643,16 +749,16 @@ makeWall = function (x, y, l, v, b) {
 }
 
 //pick up torch function
-torchAdd = function (player, torch) {
-    torch.kill();
+torchAdd = function (player, t) {
+    t.destroy();
     torchCount++;
     game.itemCollect.play('', 0, 0.5, false, true);
     ////console.log(torchCount);
 }
 
 //pick up battery function
-batteryAdd = function (player, battery) {
-    battery.kill();
+batteryAdd = function (player, b) {
+    b.destroy();
     batteryCount++;
     game.itemCollect.play('', 0, 0.5, false, true);
     ////console.log(batteryCount);

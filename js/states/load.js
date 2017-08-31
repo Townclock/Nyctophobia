@@ -16,8 +16,11 @@ Load.prototype = {
 		game.load.image('resume', 'resume.png');
 		game.load.image('menu', 'menu.png');
 		game.load.image('stairs', 'stair.png');
+		game.load.image('glowStick', 'glowstick.png');
+		game.load.image('win', 'win.png');
+		game.load.image('lose', 'lose.png');
 
-        game.load.path = 'assets/audio/Up-to-Date Audio/';
+        game.load.path = 'assets/audio/';
         game.load.audio('ambient', 'ambient.mp3');
         game.load.audio('ambient2', 'ambient2.mp3');
         game.load.audio('bg', 'background.mp3');
@@ -27,7 +30,7 @@ Load.prototype = {
         game.load.audio('glowOff', 'glowstickoff.mp3');
         game.load.audio('glowOn', 'glowstickon.mp3');
         game.load.audio('itemCollect', 'itemcollect.mp3');
-        game.load.audio('monChase', 'monsterchase.mp3');
+        //game.load.audio('monChase', 'monsterchase.mp3');
         game.load.audio('monGrowl', 'monstergrowl.mp3');
         game.load.audio('monGrowl2', 'monstergrowl2.mp3');
         game.load.audio('monGrowl3', 'monstergrowl3.mp3');

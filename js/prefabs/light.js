@@ -6,6 +6,8 @@ function Light(game, x, y, superX, superY, key, a, t) {
     this.type = t;
     this.fl = 0;
     game.physics.arcade.enable(this);
+    this.body.setSize(20, 20, 25, 10);
+    this.body.bounce.set(.2);
     this.enableBody = false;
     this.superX = superX;
     this.superY = superY;
@@ -14,6 +16,8 @@ function Light(game, x, y, superX, superY, key, a, t) {
     	case 0:
     		this.radius = 75;
     		this.charge = 1;
+    		this.scale.setTo(.7);
+    		this.anchor.setTo(.5, .2);
     		break;
     	case 1:
     		this.radius = 150;
@@ -33,11 +37,8 @@ Light.prototype.constructor = Light;
 
 Light.prototype.update = function() {
     game.physics.arcade.collide(this, walls);
-    
+
 	if(this.active){
-		/*this.x = player.x;
-		this.y = player.y;
-		this.anchor.setTo(-.5, .7);*/
 		var point = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3);
 		this.x = point.x;
 		this.y = point.y;
@@ -47,19 +48,39 @@ Light.prototype.update = function() {
         if(spacebar.justPressed() && this.type === 1){
             this.active = false;
             this.enableBody = true;
-            this.body.velocity.x = 100 * Math.cos(player.rotation - Math.PI / 2 );
-            this.body.velocity.y = 100 * Math.sin(player.rotation - Math.PI / 2 );
-            //console.log('spacebar');
-            //console.log('velocity = ' + this.body.velocity.x);
+            this.body.velocity.x = 800 * Math.cos(player.rotation - Math.PI / 2 );
+            this.body.velocity.y = 800 * Math.sin(player.rotation - Math.PI / 2 );
+            this.body.angularVelocity = -800;
         }
 	}
 	else{
 		if(this.type != 1){
-			this.visible = false;
-		}
+            if(al === 1 && this.type === 2){
+                this.visible = true;
+                var point = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3);
+                this.x = point.x;
+                this.y = point.y;
+                this.rotation = game.physics.arcade.angleToPointer(player) + (Math.PI / 2);
+            }
+            else{
+			    this.visible = false;
+		    }
+        }
 		else{
 			this.anchor.x = .5;
 			this.anchor.y = .2;
+			if(this.enableBody){
+				if(Math.abs(this.body.velocity.x) + Math.abs(this.body.velocity.y) > 20){
+					this.body.velocity.x *= .99;
+					this.body.velocity.y *= .99;
+					this.body.angularVelocity *= .97;
+				}
+				else{
+					this.body.velocity.x = this.body.velocity.y = 0;
+					this.body.angularVelocity = 0;
+					this.enableBody = false;
+				}
+			}
 		}
 	}
 	if(this.type === 1){

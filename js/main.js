@@ -1,6 +1,9 @@
 var game;
 
-var player,
+var bgimg,
+	life,
+	death,
+	player,
 	al,
 	f = 0,
 	innerCircle,
@@ -19,7 +22,8 @@ var player,
 	k3,
 	vtotal,
 	torchCount = 0,
-	batteryCount = 0;
+	batteryCount = 0,
+	winstairs;
 
 window.onload = function() {
     game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
