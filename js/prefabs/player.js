@@ -132,6 +132,7 @@ if(k1.justPressed() && !lights.children[0].active){
                 lights.children[1].x = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).x;
                 lights.children[1].y = hcircle.circumferencePoint(game.physics.arcade.angleToPointer(player) + Math.PI/3).y;
                 lights.children[1].active = true;
+		al = 1;
             }
             else if (batteryCount > 0){
                 for (var x = 0; x < lights.children.length; x++){
@@ -140,8 +141,9 @@ if(k1.justPressed() && !lights.children[0].active){
                 lights.children[1].charge = 100;
                 lights.children[1].active = true;
                 batteryCount --;
+		al = 1;
             }
-            al = 1;
+            
             //flashlight on sound
             game.flashOn.play('', 0, 0.35, false, true);
         }
