@@ -32,6 +32,7 @@ Monster.prototype.update = function() {
             &&(nearestLight == null 
             || Phaser.Math.distance(light.x, light.y, this.x, this.y) < Phaser.Math.distance(nearestLight.x, nearestLight.y, this.x, this.y))){
             	var line = new Phaser.Line(this.x, this.y, light.x, light.y);
+		ncircle.radius = light.radius;
             	if (!getWallIntersection(line, lwalls)){
                 	nearestLight = light;
                 }
